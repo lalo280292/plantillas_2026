@@ -1,0 +1,28 @@
+MARIANA v3 — ESTRUCTURA SIMPLIFICADA
+
+1) PARA DISEÑAR
+Abre: css/styles.css
+
+Al inicio está la sección "ZONA DE DISEÑO RÁPIDO".
+Ahí puedes cambiar:
+- fondo de la invitación: --invitation-bg-image
+- fondo lateral: --side-bg-image
+- colores
+- ancho mínimo y máximo (320 / 500)
+- tipografías
+
+El fondo YA NO se vuelve a definir desde JavaScript.
+No necesitas !important para paper.jpg.
+
+2) PARA OCULTAR EL SOBRE MIENTRAS EDITAS
+Abre: js/config.js
+
+skipEnvelope: true   = no muestra el sobre
+skipEnvelope: false  = muestra el sobre y permite abrirlo
+
+3) TEXTOS Y DATOS
+En js/config.js cambias nombres, fechas, ubicaciones, galería, audio, etc.
+
+REGLA SIMPLE:
+- ¿Cómo se ve? -> css/styles.css
+- ¿Qué dice / qué dato usa? -> js/config.js

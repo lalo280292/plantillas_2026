@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control | Plan y Fiesta</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Animación para el spinner */
+        .loader {
+            border-top-color: #10b981;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center p-6">
+
+    <div class="max-w-5xl w-full">
+        
+        <div class="text-center mb-10 mt-6">
+            <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">Panel de Control</h1>
+            <p class="text-slate-500">Gestión centralizada del evento</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="ph-fill ph-gear"></i> Administración
+                </h2>
+                <div class="space-y-3">
+                    <button onclick="window.location.href='https://docs.google.com/spreadsheets/d/1PANPDD4sI-WmnNsfnqcHg0J91O6D0leyjMXuVQoB76w/edit?gid=1847049705#gid=1847049705'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-green-50 text-slate-700 hover:text-green-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-microsoft-excel-logo text-xl text-green-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Google Sheets</span>
+                    </button>
+
+                    <button onclick="window.location.href='control_formulario.html'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-toggle-left text-xl text-blue-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Control Formulario</span>
+                    </button>
+                    
+                    <button onclick="window.location.href='firmas.html'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-purple-50 text-slate-700 hover:text-purple-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-signature text-xl text-purple-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Libro de Firmas</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-50 rounded-full blur-2xl opacity-50"></div>
+
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="ph-fill ph-monitor-play"></i> Vistas en Vivo
+                </h2>
+                <div class="space-y-3">
+                    <button onclick="window.location.href='lista.html'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-kanban text-xl text-indigo-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Tablero de Invitados</span>
+                    </button>
+
+                    <button onclick="window.location.href='confirmados.html'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-rose-50 text-slate-700 hover:text-rose-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-chart-pie-slice text-xl text-rose-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Reporte de Asistencia</span>
+                    </button>
+
+                    <button onclick="window.location.href='mesas.html'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-sky-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-armchair text-xl text-sky-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Mesas (Lista General)</span>
+                    </button>
+
+                    <button onclick="window.location.href='mesaconfirmados.html'" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-check-square-offset text-xl text-emerald-600"></i>
+                        </div>
+                        <span class="font-semibold text-sm">Mesas (Confirmados)</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="ph-fill ph-printer"></i> Impresión PDF
+                </h2>
+                <div class="space-y-3">
+                    <button id="listaPdfBtn" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-file-pdf text-xl text-orange-600"></i>
+                        </div>
+                        <div>
+                            <span class="block font-semibold text-sm">Lista Completa</span>
+                            <span class="text-[10px] text-slate-400">Todos los registros</span>
+                        </div>
+                    </button>
+
+                    <button id="confirmadosPdfBtn" 
+                        class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-teal-50 text-slate-700 hover:text-teal-700 rounded-xl border border-slate-100 transition-all group text-left">
+                        <div class="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-file-pdf text-xl text-teal-600"></i>
+                        </div>
+                        <div>
+                            <span class="block font-semibold text-sm">Lista Confirmados</span>
+                            <span class="text-[10px] text-slate-400">Solo asistencia "SÍ"</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-10 text-center text-slate-300 text-sm">
+            &copy; 2025 Plan y Fiesta System
+        </div>
+
+    </div>
+
+    <div id="loading-screen" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 hidden flex-col justify-center items-center">
+        <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-200 h-12 w-12 mb-4"></div>
+        <h2 class="text-slate-800 text-xl font-semibold">Generando documento...</h2>
+        <p class="text-slate-500 text-sm">Por favor espera un momento.</p>
+    </div>
+
+<script>
+    // Referencias a botones PDF
+    document.getElementById('listaPdfBtn').addEventListener('click', generarListaPDF);
+    document.getElementById('confirmadosPdfBtn').addEventListener('click', generarConfirmadosPDF);
+
+    // Funciones de UI
+    function mostrarLoading() {
+        document.getElementById('loading-screen').classList.remove('hidden');
+        document.getElementById('loading-screen').classList.add('flex');
+    }
+
+    function ocultarLoading() {
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('loading-screen').classList.remove('flex');
+    }
+
+    // --- GENERAR PDF LISTA COMPLETA ---
+    async function generarListaPDF() {
+        try {
+            mostrarLoading();
+
+            const response = await fetch('proxy.php?sheet=Lista');
+            const data = await response.json();
+
+            // Configuración de columnas (Agregado Adolescentes)
+            const columns = [
+                { header: 'ID', dataKey: 'ID' },
+                { header: 'Familia', dataKey: 'Familia' },
+                { header: 'Adul.', dataKey: 'Adultos' },
+                { header: 'Adol.', dataKey: 'Adolescentes' }, 
+                { header: 'Niñ.', dataKey: 'Ninos' },
+                { header: 'Detalle Nombres', dataKey: 'Nombres' },
+                { header: 'Mesa', dataKey: 'Mesa' }
+            ];
+
+            const rows = data.map(item => ({
+                ID: item.ID,
+                Familia: item.Familia,
+                Adultos: item.Adultos,
+                Adolescentes: item.Adolescentes,
+                Ninos: item.Ninos,
+                Nombres: item.Nombres,
+                Mesa: item.Mesa
+            }));
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            
+            doc.setFontSize(18);
+            doc.text('Lista General de Invitados', 14, 20);
+            doc.setFontSize(10);
+            doc.text('Generado: ' + new Date().toLocaleDateString(), 14, 26);
+
+            doc.autoTable({
+                startY: 35,
+                head: [columns.map(col => col.header)],
+                body: rows.map(row => columns.map(col => row[col.dataKey])),
+                theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 2, halign: 'center' },
+                columnStyles: { 5: { halign: 'left', cellWidth: 80 } }
+            });
+
+            doc.save('Lista_General_Invitados.pdf');
+        } catch (error) {
+            console.error(error);
+            alert('Error al generar PDF: ' + error.message);
+        } finally {
+            ocultarLoading();
+        }
+    }
+
+    // --- GENERAR PDF CONFIRMADOS ---
+    async function generarConfirmadosPDF() {
+        try {
+            mostrarLoading();
+
+            const response = await fetch('proxy.php?sheet=Confirmacion');
+            const data = await response.json();
+
+            // Filtrar solo los que dijeron "Si"
+            const dataFiltrada = data.filter(item => 
+                item.asistira && item.asistira.toString().toLowerCase() === 'si'
+            );
+
+            const columns = [
+                { header: 'ID', dataKey: 'id' },
+                { header: 'Familia', dataKey: 'familia' },
+                { header: 'Total', dataKey: 'cantidad' },
+                { header: 'Adul.', dataKey: 'adultos' },
+                { header: 'Adol.', dataKey: 'adolescentes' },
+                { header: 'Niñ.', dataKey: 'ninos' },
+                { header: 'Nombres Confirmados', dataKey: 'nombres' },
+                { header: 'Mesa', dataKey: 'mesa' }
+            ];
+
+            const rows = dataFiltrada.map(item => ({
+                id: item.id,
+                familia: item.familia,
+                cantidad: item.cantidad,
+                adultos: item.adultos,
+                adolescentes: item.adolescentes,
+                ninos: item.ninos,
+                nombres: item.nombres,
+                mesa: item.mesa
+            }));
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+
+            doc.setFontSize(18);
+            doc.setTextColor(40, 167, 69);
+            doc.text('Reporte de Asistencia Confirmada', 14, 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text('Total Familias: ' + dataFiltrada.length, 14, 26);
+
+            doc.autoTable({
+                startY: 35,
+                head: [columns.map(col => col.header)],
+                body: rows.map(row => columns.map(col => row[col.dataKey])),
+                theme: 'striped',
+                headStyles: { fillColor: [40, 167, 69] },
+                styles: { fontSize: 10, cellPadding: 3, halign: 'center' },
+                columnStyles: { 6: { halign: 'left', cellWidth: 80 } }
+            });
+
+            doc.save('Lista_Confirmados.pdf');
+        } catch (error) {
+            console.error(error);
+            alert('Error al generar PDF: ' + error.message);
+        } finally {
+            ocultarLoading();
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Descarga tu pase de acceso</title>
+    <!-- Incluye los scripts necesarios -->
+    <script src="https://unpkg.com/qrious@4.0.2/dist/qrious.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <!-- Meta etiqueta para hacer la página responsiva -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2em;
+        }
+        #pase-container {
+            display: none;
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            transform: scale(1);
+        }
+        #pase {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        #qr-container {
+            position: absolute;
+            width: 50%;
+            left: 25%;
+            top: 80%;
+            transform: translateY(-50%);
+        }
+        #codigo {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        #buttons-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #download-button, #confirmation-button {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #download-button:hover, #confirmation-button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            #download-button, #confirmation-button {
+                width: 90%;
+                padding: 12px;
+                font-size: 1em;
+            }
+            /* No cambiamos el tamaño del QR ni su posición para mantenerlo como en el código anterior */
+        }
+    </style>
+</head>
+<body>
+    <h1>Descarga tu pase de acceso</h1>
+    <div id="buttons-container">
+        <button id="download-button">Descargar Pase</button>
+        <button id="confirmation-button">Consultar mis datos de confirmación</button>
+    </div>
+    <div style="transform: scale(1);">
+    <div id="pase-container">
+        <img id="pase" src="suqr.jpg" alt="Imagen de fondo PASE">
+        <div id="qr-container">
+            <canvas id="codigo"></canvas>
+        </div>
+    </div>
+    </div> <!-- Cerrar el div de transform: scale(0.7); -->
+    <script>
+        function obtenerIdDeUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("id");
+        }
+
+        function generarCodigoQR(id) {
+            const currentUrl = window.location.origin; // Obtiene la parte de la URL hasta .com
+            const link = `${currentUrl}/escaner.html?id=${id}`; // Construye el nuevo enlace
+            const qrCanvas = document.querySelector("#codigo");
+            const qrContainer = document.querySelector("#qr-container");
+            
+            // Obtener el tamaño mostrado del contenedor del QR
+            const qrContainerRect = qrContainer.getBoundingClientRect();
+            const qrSize = qrContainerRect.width; // Asumiendo que es un cuadrado
+
+            // Establecer el tamaño del canvas del QR
+            qrCanvas.width = qrSize;
+            qrCanvas.height = qrSize;
+
+            new QRious({
+                element: qrCanvas,
+                value: link,
+                size: qrSize,
+                backgroundAlpha: 0,
+                foreground: "#000000",
+                level: "H",
+            });
+        }
+
+        function downloadImage() {
+            const id = obtenerIdDeUrl();
+            if (!id) {
+                alert('ID no proporcionado en la URL.');
+                return;
+            }
+            const backgroundImage = document.querySelector('#pase');
+            const qrCanvas = document.querySelector('#codigo');
+
+            // Crear un nuevo canvas
+            const canvas = document.createElement('canvas');
+
+            // Establecer el tamaño del canvas igual al tamaño natural de la imagen de fondo
+            canvas.width = backgroundImage.naturalWidth;
+            canvas.height = backgroundImage.naturalHeight;
+
+            const ctx = canvas.getContext('2d');
+
+            // Dibujar la imagen de fondo en el canvas
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+            // Obtener el tamaño y posición mostrados de la imagen de fondo
+            const paseRect = backgroundImage.getBoundingClientRect();
+
+            // Calcular factores de escala entre el tamaño mostrado y el tamaño natural
+            const scaleX = canvas.width / paseRect.width;
+            const scaleY = canvas.height / paseRect.height;
+
+            // Obtener posiciones y tamaños del canvas del QR respecto a la imagen de fondo
+            const qrRect = qrCanvas.getBoundingClientRect();
+
+            const qrX_display = qrRect.left - paseRect.left;
+            const qrY_display = qrRect.top - paseRect.top;
+            const qrWidth_display = qrRect.width;
+            const qrHeight_display = qrRect.height;
+
+            // Convertir posiciones y tamaños mostrados a tamaño natural
+            const qrX_natural = qrX_display * scaleX;
+            const qrY_natural = qrY_display * scaleY;
+            const qrWidth_natural = qrWidth_display * scaleX;
+            const qrHeight_natural = qrHeight_display * scaleY;
+
+            // Dibujar el QR en el canvas principal en la posición y tamaño correctos
+            ctx.drawImage(qrCanvas, qrX_natural, qrY_natural, qrWidth_natural, qrHeight_natural);
+
+            // Convertir el canvas a una URL de datos y descargar la imagen
+            const dataURL = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'pase_con_qr.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function redirectToConfirmation() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+
+            if (!id) {
+                alert('ID no proporcionado en la URL.');
+                return;
+            }
+
+            window.location.href = 'escaner.html?id=' + encodeURIComponent(id);
+        }
+
+        function init() {
+            const id = obtenerIdDeUrl();
+            if (id) {
+                document.querySelector("#pase-container").style.display = "block";
+                generarCodigoQR(id);
+                // Agregar listener al botón de descarga
+                document.querySelector('#download-button').addEventListener('click', downloadImage);
+            } else {
+                alert('ID no proporcionado en la URL.');
+            }
+            // Agregar listener al botón de confirmación
+            document.querySelector('#confirmation-button').addEventListener('click', redirectToConfirmation);
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>

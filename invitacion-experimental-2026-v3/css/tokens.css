@@ -1,0 +1,26 @@
+@layer tokens {
+  :root {
+    --paper:#eee8dc;
+    --paper-2:#d8d0c1;
+    --ink:#171a17;
+    --olive:#29342c;
+    --olive-2:#1d251f;
+    --sage:#788071;
+    --gold:#a88d5f;
+    --wine:#5b4141;
+    --white:#fffdf8;
+    --line:color-mix(in srgb,var(--ink) 17%,transparent);
+    --font-display:"Cormorant Garamond",Georgia,serif;
+    --font-sans:"Manrope",system-ui,sans-serif;
+    --font-condensed:"Barlow Condensed",Arial Narrow,sans-serif;
+    --gutter:clamp(1rem,3.4vw,4.75rem);
+    --shell:94rem;
+    --section:clamp(6rem,10vw,12rem);
+    --xs:clamp(.68rem,.63rem + .15vw,.78rem);
+    --sm:clamp(.82rem,.77rem + .2vw,.96rem);
+    --base:clamp(.98rem,.91rem + .26vw,1.16rem);
+    --h2:clamp(4rem,8vw,9.5rem);
+    --mega:clamp(6.5rem,19vw,18rem);
+    --ease:cubic-bezier(.2,.75,.15,1);
+  }
+}

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#29342c">
+  <title>Diana & Alejandro — Experimental Wedding 2026</title>
+  <meta name="description" content="Invitación experimental 2026: FLIP, SVG, máscaras orgánicas, profundidad y motion cinematográfico con GSAP.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/experience.css">
+</head>
+<body>
+  <div class="progress" data-progress aria-hidden="true"></div>
+  <div class="hud" aria-hidden="true"><span>D&A / EXPERIMENT 03</span><span data-chapter>01 · Prelude</span></div>
+
+  <div class="gate" data-gate>
+    <svg class="gate__botanical gate__botanical--a" viewBox="0 0 600 900" aria-hidden="true">
+      <path class="gate-vine" d="M45 820C160 735 99 586 217 514C329 445 224 291 367 215C436 179 476 111 501 44"/>
+      <path class="gate-leaf" d="M161 641c-72-10-98-55-96-101 57 13 91 39 96 101Z"/><path class="gate-leaf" d="M243 482c64-27 105-13 133 23-51 35-97 38-133-23Z"/><path class="gate-leaf" d="M349 252c-56-23-73-67-59-108 49 24 75 57 59 108Z"/>
+    </svg>
+    <svg class="gate__botanical gate__botanical--b" viewBox="0 0 600 900" aria-hidden="true">
+      <path class="gate-vine" d="M45 820C160 735 99 586 217 514C329 445 224 291 367 215C436 179 476 111 501 44"/>
+      <path class="gate-leaf" d="M161 641c-72-10-98-55-96-101 57 13 91 39 96 101Z"/><path class="gate-leaf" d="M243 482c64-27 105-13 133 23-51 35-97 38-133-23Z"/><path class="gate-leaf" d="M349 252c-56-23-73-67-59-108 49 24 75 57 59 108Z"/>
+    </svg>
+    <div class="gate__curtain gate__curtain--left"><span data-bind="couple.brideInitial">D</span></div>
+    <div class="gate__curtain gate__curtain--right"><span data-bind="couple.groomInitial">A</span></div>
+    <div class="gate__center">
+      <p class="eyebrow" data-bind="date.long">28 de noviembre de 2026</p>
+      <button class="seal" data-open type="button"><span class="seal__mark">D <i>&</i> A</span><span class="seal__copy">Entrar</span></button>
+      <p class="gate__note">Mueve ligeramente el dispositivo · la composición tiene profundidad</p>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero-stage" data-chapter-name="01 · Prelude">
+      <div class="hero">
+        <figure class="hero__media"><img data-bind-src="images.hero" alt="Pareja de novios"></figure>
+        <div class="hero__veil"></div>
+        <div class="hero__topline"><span class="eyebrow">Cuernavaca · México</span><span class="eyebrow" data-bind="date.short">28 · 11 · 2026</span></div>
+        <div class="hero__type" aria-label="Diana y Alejandro">
+          <span class="hero-word hero-word--one" data-hero-word data-depth=".20" data-bind="couple.bride">Diana</span>
+          <span class="hero-amp" data-depth=".32">&</span>
+          <span class="hero-word hero-word--two" data-hero-word data-depth=".16" data-bind="couple.groom">Alejandro</span>
+        </div>
+        <div class="hero__echo" aria-hidden="true"><span>FOREVER</span><span>FOREVER</span><span>FOREVER</span></div>
+        <svg class="hero__line" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true"><path data-hero-line d="M-70 660C260 350 466 715 768 394C1017 128 1225 400 1690 78"/></svg>
+        <div class="flower-depth flower-depth--1" data-depth=".55" aria-hidden="true"><i></i><i></i><i></i><b></b></div>
+        <div class="flower-depth flower-depth--2" data-depth="-.38" aria-hidden="true"><i></i><i></i><i></i><b></b></div>
+        <div class="hero__scroll eyebrow">Scroll to unfold <i></i></div>
+      </div>
+    </section>
+
+    <section class="continuum" data-chapter-name="02 · Continuum">
+      <div class="continuum__stage">
+        <div class="continuum__intro"><span class="eyebrow">Una fotografía · cuatro composiciones</span><h2 class="display">La imagen<br><em>no cambia.</em><br>Cambia su mundo.</h2></div>
+        <div class="flip-layout">
+          <div class="flip-slot flip-slot--a" data-flip-slot="0"></div>
+          <div class="flip-copy flip-copy--a"><span>01</span><p>Primero ocupa todo: recuerdo antes que información.</p></div>
+          <div class="flip-slot flip-slot--b" data-flip-slot="1"></div>
+          <div class="flip-copy flip-copy--b"><span>02</span><p>Después se convierte en retrato y deja entrar la palabra.</p></div>
+          <div class="flip-slot flip-slot--c" data-flip-slot="2"></div>
+          <div class="flip-copy flip-copy--c"><span>03</span><p>Luego es un objeto dentro del diseño, no un simple fondo.</p></div>
+          <div class="flip-slot flip-slot--d" data-flip-slot="3"></div>
+          <div class="flip-copy flip-copy--d"><span>04</span><p>Finalmente se vuelve recuerdo físico, casi una fotografía impresa.</p></div>
+          <figure class="flip-photo" data-flip-photo><img data-bind-src="images.story" alt="Pareja"></figure>
+        </div>
+        <div class="continuum__steps" aria-hidden="true"><i data-flip-step="0"></i><i data-flip-step="1"></i><i data-flip-step="2"></i><i data-flip-step="3"></i></div>
+      </div>
+    </section>
+
+    <section class="organic" data-chapter-name="03 · Organic frame">
+      <div class="shell organic__grid">
+        <div class="organic__copy"><span class="eyebrow">No todo tiene que ser rectangular</span><h2 class="display">Una imagen puede<br>respirar como<br><em>una forma viva.</em></h2><p data-bind="story.copy">Después de tantos días compartidos...</p></div>
+        <div class="organic__art">
+          <svg class="organic__svg" viewBox="0 0 760 920" role="img" aria-label="Fotografía con máscara orgánica">
+            <defs><clipPath id="organicClip"><path id="organicMask" d="M382 34C558 37 700 145 722 318C746 507 660 760 486 860C330 949 95 850 46 668C-4 483 41 219 184 104C242 57 304 33 382 34Z"/></clipPath></defs>
+            <image data-organic-image data-bind-href="images.portrait" href="" x="0" y="0" width="760" height="920" preserveAspectRatio="xMidYMid slice" clip-path="url(#organicClip)"/>
+            <path class="organic__outline" d="M382 34C558 37 700 145 722 318C746 507 660 760 486 860C330 949 95 850 46 668C-4 483 41 219 184 104C242 57 304 33 382 34Z"/>
+            <path id="maskShapeB" class="svg-hidden" d="M374 28C528 45 686 91 724 279C759 452 692 715 540 837C403 947 172 906 69 736C-23 585 10 297 138 150C206 72 278 17 374 28Z"/>
+            <path id="maskShapeC" class="svg-hidden" d="M391 47C597 6 724 175 709 354C694 529 649 770 452 860C283 937 105 836 56 668C7 497 38 244 188 105C240 57 311 63 391 47Z"/>
+          </svg>
+          <div class="organic__caption"><span>Shape / 03</span><span>Scroll-driven mask</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="botanical" data-chapter-name="04 · Botanical path">
+      <div class="botanical__pin">
+        <div class="botanical__copy"><span class="eyebrow">El trazo también cuenta</span><h2 class="display">Una línea<br>encuentra<br><em>su camino.</em></h2></div>
+        <svg class="botanical__svg" viewBox="0 0 1600 900" aria-hidden="true">
+          <path id="journeyPath" class="botanical__path" d="M-80 720C155 630 250 830 454 637C599 501 517 312 735 293C1014 268 1007 634 1257 548C1437 487 1435 225 1700 136"/>
+          <path class="botanical__twig twig-1" d="M421 657c-45-92-29-143 27-191"/><path class="botanical__twig twig-2" d="M744 293c44-82 110-113 194-99"/><path class="botanical__twig twig-3" d="M1254 548c-31-104 4-165 76-214"/>
+          <g class="journey-leaf" data-journey-leaf><path d="M0-18C22-13 35 2 27 20C9 16-3 7 0-18Z"/><path d="M0-18C-21-12-33 4-25 21C-7 15 4 6 0-18Z"/></g>
+        </svg>
+        <div class="botanical__labels"><span>Nos conocimos</span><span>Nos elegimos</span><span>Nos casamos</span></div>
+      </div>
+    </section>
+
+    <section class="type-photo" data-chapter-name="05 · Type × image">
+      <div class="type-photo__pin">
+        <figure class="type-photo__media"><img data-bind-src="images.detail" alt="Detalle de boda"></figure>
+        <div class="type-photo__word type-photo__word--back" aria-hidden="true">TOGETHER</div>
+        <div class="type-photo__word type-photo__word--front" aria-hidden="true">TOGETHER</div>
+        <div class="type-photo__copy"><span class="eyebrow">Tipografía + fotografía</span><p>La palabra entra detrás de la imagen y vuelve a salir delante. Dos capas, una sola composición.</p></div>
+      </div>
+    </section>
+
+    <section class="venues section" data-chapter-name="06 · The day">
+      <div class="shell venues__grid">
+        <header class="venues__head"><span class="eyebrow">Dónde & cuándo</span><h2 class="display">El día<br>que importa.</h2></header>
+        <article class="venue-card"><span class="venue-card__n">01</span><div><span class="eyebrow">Ceremonia</span><h3 data-bind="ceremony.name">Capilla de San Miguel</h3><strong data-bind="ceremony.time">17:00</strong><p data-bind="ceremony.address">Dirección</p><a class="button" data-map="ceremony" href="#">Mapa ↗</a></div></article>
+        <article class="venue-card venue-card--dark"><span class="venue-card__n">02</span><div><span class="eyebrow">Recepción</span><h3 data-bind="reception.name">Jardín Casa Olivo</h3><strong data-bind="reception.time">19:00</strong><p data-bind="reception.address">Dirección</p><a class="button" data-map="reception" href="#">Mapa ↗</a></div></article>
+      </div>
+    </section>
+
+    <section class="gallery" data-chapter-name="07 · Film strip">
+      <div class="gallery__pin">
+        <div class="gallery__title"><span class="eyebrow">Memorias en movimiento</span><h2 class="display">No pares<br>la película.</h2></div>
+        <div class="gallery__track" data-gallery-track>
+          <figure><img data-bind-src="images.gallery1" alt="Pareja"><figcaption>01 / La calma</figcaption></figure>
+          <figure><img data-bind-src="images.gallery2" alt="Pareja"><figcaption>02 / El sí</figcaption></figure>
+          <figure><img data-bind-src="images.gallery3" alt="Detalles"><figcaption>03 / Los detalles</figcaption></figure>
+          <figure><img data-bind-src="images.gallery4" alt="Pareja"><figcaption>04 / El camino</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="timeline section" data-chapter-name="08 · Itinerary">
+      <div class="shell"><header class="timeline__head"><span class="eyebrow">Una noche</span><h2 class="display">Cinco momentos.</h2></header><div class="timeline__rail" data-itinerary><div class="timeline__line"></div><div class="timeline__progress" data-timeline-progress></div></div></div>
+    </section>
+
+    <section class="rsvp section" data-chapter-name="09 · RSVP">
+      <div class="shell rsvp__grid">
+        <div><span class="eyebrow">Confirma tu asistencia</span><h2 class="display">Ahora<br>faltas tú.</h2><p>Confirma antes del <strong data-bind="rsvp.deadline">31 de octubre de 2026</strong>.</p></div>
+        <form class="rsvp-form" data-rsvp-form>
+          <label><span>Nombre completo</span><input required name="name" autocomplete="name" placeholder="Tu nombre"></label>
+          <label><span>¿Asistirás?</span><select required name="attendance"><option value="">Selecciona</option><option>Sí, asistiré</option><option>No podré asistir</option></select></label>
+          <div class="form-row"><label><span>Adultos</span><input type="number" name="adults" min="0" value="1"></label><label><span>Niños</span><input type="number" name="children" min="0" value="0"></label></div>
+          <label><span>Mensaje</span><textarea name="message" rows="4" placeholder="Algo que quieras decirnos..."></textarea></label>
+          <button class="button button--dark" type="submit">Confirmar</button>
+        </form>
+        <div class="rsvp-success" data-rsvp-success hidden><span class="eyebrow">Gracias</span><h3 class="display">Nos vemos ahí.</h3></div>
+      </div>
+    </section>
+
+    <section class="closing" data-chapter-name="10 · Forever">
+      <figure class="closing__media"><img data-bind-src="images.closing" alt="Pareja"></figure>
+      <div class="closing__letters" aria-hidden="true"><span data-depth=".28">D</span><i>&</i><span data-depth="-.22">A</span></div>
+      <div class="closing__copy"><span class="eyebrow" data-bind="date.long">28 de noviembre de 2026</span><h2 class="display">Nos vemos<br>en este capítulo.</h2></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/Flip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/MotionPathPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/MorphSVGPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.0/dist/DrawSVGPlugin.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/motion.js"></script>
+</body>
+</html>

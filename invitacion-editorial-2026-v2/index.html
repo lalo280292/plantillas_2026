@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2a342b">
+  <title>Diana & Alejandro — Kinetic Editorial 2026</title>
+  <meta name="description" content="Invitación de boda cinemática, responsive y animada con GSAP.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/experience.css">
+</head>
+<body>
+  <div class="progress" data-progress aria-hidden="true"></div>
+  <div class="hud" aria-hidden="true"><span class="hud__brand">D&A</span><span class="hud__chapter" data-chapter>01 / Apertura</span></div>
+
+  <div class="gate" data-gate>
+    <div class="gate__leaf gate__leaf--left"><span class="gate__left-letter" data-bind="couple.brideInitial">D</span></div>
+    <div class="gate__leaf gate__leaf--right"><span class="gate__right-letter" data-bind="couple.groomInitial">A</span></div>
+    <div class="gate__center">
+      <p class="gate__date" data-bind="date.long">28 de noviembre de 2026</p>
+      <button class="seal" type="button" data-open aria-label="Abrir invitación">
+        <span class="seal__monogram"><span data-bind="couple.brideInitial">D</span> & <span data-bind="couple.groomInitial">A</span></span>
+        <span class="seal__label">Romper el sello</span>
+      </button>
+    </div>
+    <p class="gate__hint">Una invitación para recordar</p>
+  </div>
+
+  <main>
+    <section class="hero-stage" id="inicio" data-chapter-name="01 / Apertura">
+      <div class="hero" data-hero>
+        <div class="hero__image" data-hero-image><img data-bind-src="images.hero" src="" alt="Pareja celebrando su boda"></div>
+        <div class="hero__shade"></div>
+        <div class="hero__frame"></div>
+        <div class="hero__caption"><span class="eyebrow">Nos casamos</span></div>
+        <div class="hero__names">
+          <div class="hero__name hero__name--bride" data-hero-bride data-bind="couple.bride">Diana</div>
+          <div class="hero__amp" data-hero-amp>&</div>
+          <div class="hero__name hero__name--groom" data-hero-groom data-bind="couple.groom">Alejandro</div>
+        </div>
+        <div class="hero__date" data-bind="date.long">28 de noviembre de 2026</div>
+        <div class="hero__ghost" aria-hidden="true">FOREVER</div>
+        <div class="hero__scroll"><span>Desliza</span><i></i></div>
+      </div>
+    </section>
+
+    <section class="story" id="historia" data-chapter-name="02 / Historia">
+      <div class="story__pin">
+        <div class="story__orb" aria-hidden="true"></div>
+        <div class="shell story__grid">
+          <div class="story__index eyebrow">02 <span>Nuestra historia</span></div>
+          <blockquote class="story__quote display" data-story-quote data-bind="story.quote">Hay historias que no se cuentan: se sienten.</blockquote>
+          <p class="story__copy" data-bind="story.copy">Después de tantos días compartidos, decidimos elegirnos para todos los que vienen.</p>
+        </div>
+        <figure class="story__media" data-story-media><img data-bind-src="images.story" src="" alt="Momento íntimo de la pareja"></figure>
+        <span class="story__vertical">A story in motion · 2026</span>
+      </div>
+    </section>
+
+    <section class="families section" data-chapter-name="03 / Familias">
+      <div class="shell">
+        <header class="families__head"><span class="eyebrow">Con la bendición de</span><h2 class="display">Las personas que nos trajeron hasta aquí.</h2></header>
+        <div class="families__grid">
+          <article class="family" data-family><span class="family__number">01</span><p class="family__label">Padres de la novia</p><div data-bride-parents></div></article>
+          <article class="family" data-family><span class="family__number">02</span><p class="family__label">Padres del novio</p><div data-groom-parents></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="venues" id="detalles" data-chapter-name="04 / El día">
+      <div class="venues__pin">
+        <div class="venues__backword" aria-hidden="true">THE DAY</div>
+        <header class="venues__head"><span class="eyebrow">Dónde & cuándo</span><h2 class="display">Dos escenas.<br>Un solo día.</h2></header>
+        <div class="venue-stack">
+          <article class="venue-card" data-venue="ceremony">
+            <figure class="venue-card__media"><img data-bind-src="images.portrait" src="" alt="Ceremonia"><span class="venue-card__index">01</span></figure>
+            <div class="venue-card__body"><span class="venue-card__type">Ceremonia</span><h3 class="venue-card__name" data-bind="ceremony.name">Capilla de San Miguel</h3><div class="venue-card__meta"><div><strong data-bind="ceremony.time">17:00</strong><span> hrs.</span></div><p data-bind="ceremony.address">Av. de la Arboleda 120</p></div><a class="button" href="#" data-map="ceremony">Abrir mapa ↗</a></div>
+          </article>
+          <article class="venue-card" data-venue="reception">
+            <figure class="venue-card__media"><img data-bind-src="images.detail" src="" alt="Recepción"><span class="venue-card__index">02</span></figure>
+            <div class="venue-card__body"><span class="venue-card__type">Recepción</span><h3 class="venue-card__name" data-bind="reception.name">Jardín Casa Olivo</h3><div class="venue-card__meta"><div><strong data-bind="reception.time">19:00</strong><span> hrs.</span></div><p data-bind="reception.address">Camino Real 58</p></div><a class="button" href="#" data-map="reception">Abrir mapa ↗</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="countdown" data-chapter-name="05 / Cuenta atrás">
+      <div class="shell"><header class="countdown__top"><div><span class="eyebrow">Falta poco</span><h2 class="display">Hasta nuestro día.</h2></div><span class="eyebrow" data-bind="date.short">28 · 11 · 2026</span></header>
+        <div class="countdown__grid" data-countdown>
+          <div class="countdown__cell"><strong data-days>000</strong><span>Días</span></div>
+          <div class="countdown__cell"><strong data-hours>00</strong><span>Horas</span></div>
+          <div class="countdown__cell"><strong data-minutes>00</strong><span>Minutos</span></div>
+          <div class="countdown__cell"><strong data-seconds>00</strong><span>Segundos</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery" id="galeria" data-chapter-name="06 / Instantes">
+      <div class="gallery__pin">
+        <header class="gallery__head"><div><span class="eyebrow">Un poco de nosotros</span><h2 class="display">Instantes.</h2></div><div class="gallery__counter"><span data-gallery-current>01</span> / 04</div></header>
+        <div class="gallery__track" data-gallery-track>
+          <figure class="gallery__item"><img data-bind-src="images.gallery1" src="" alt="Pareja sonriendo"><figcaption><span>01 / Nosotros</span><strong>La calma</strong></figcaption></figure>
+          <figure class="gallery__item"><img data-bind-src="images.gallery2" src="" alt="Beso de boda"><figcaption><span>02 / Nosotros</span><strong>El sí</strong></figcaption></figure>
+          <figure class="gallery__item"><img data-bind-src="images.gallery3" src="" alt="Detalles de boda"><figcaption><span>03 / Nosotros</span><strong>Los detalles</strong></figcaption></figure>
+          <figure class="gallery__item"><img data-bind-src="images.gallery4" src="" alt="Pareja caminando"><figcaption><span>04 / Nosotros</span><strong>El camino</strong></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="timeline section" id="itinerario" data-chapter-name="07 / Itinerario">
+      <div class="shell"><header class="timeline__head"><span class="eyebrow">El recorrido</span><h2 class="display">Una noche,<br>cinco momentos.</h2></header>
+        <div class="timeline__rail" data-itinerary><div class="timeline__line"></div><div class="timeline__progress" data-timeline-progress></div></div>
+      </div>
+    </section>
+
+    <section class="dress section" data-chapter-name="08 / Dress code">
+      <div class="shell dress__grid"><div class="dress__copy"><span class="eyebrow">Dress code</span><h2 class="display" data-bind="dressCode.title">Formal elegante</h2><p data-bind="dressCode.description">Tonos sobrios...</p></div><div class="dress__rings" aria-hidden="true"><i></i><i></i><i></i></div></div>
+    </section>
+
+    <section class="rsvp section" id="rsvp" data-chapter-name="09 / RSVP">
+      <div class="shell rsvp__grid">
+        <div class="rsvp__intro"><span class="eyebrow">Confirma tu asistencia</span><h2 class="display">Queremos<br>verte ahí.</h2><p>Ayúdanos a preparar cada detalle confirmando antes del <strong data-bind="rsvp.deadline">31 de octubre de 2026</strong>.</p></div>
+        <form class="rsvp-form" data-rsvp-form>
+          <label><span>Nombre completo</span><input type="text" name="name" autocomplete="name" placeholder="Tu nombre" required></label>
+          <label><span>¿Asistirás?</span><select name="attendance" required><option value="">Selecciona una opción</option><option>Sí, asistiré</option><option>No podré asistir</option></select></label>
+          <div class="form-row"><label><span>Adultos</span><input type="number" name="adults" min="0" value="1"></label><label><span>Niños</span><input type="number" name="children" min="0" value="0"></label></div>
+          <label><span>Mensaje</span><textarea name="message" rows="4" placeholder="Algo que quieras decirnos..."></textarea></label>
+          <button class="button button--dark" type="submit">Confirmar asistencia</button>
+        </form>
+        <div class="rsvp-success" data-rsvp-success hidden><span class="eyebrow">Respuesta guardada</span><h3 class="display">Gracias.</h3><p>Esta demo guarda la respuesta solamente durante la sesión. Aquí conectaremos tu backend real.</p></div>
+      </div>
+    </section>
+
+    <section class="closing" data-chapter-name="10 / Nos vemos">
+      <div class="closing__pin"><figure class="closing__photo" data-closing-photo><img data-bind-src="images.closing" src="" alt="Pareja al atardecer"></figure><div class="closing__shade"></div><div class="closing__content"><span class="eyebrow">Nos vemos el</span><h2 class="display"><span data-bind="couple.brideInitial">D</span><i>&</i><span data-bind="couple.groomInitial">A</span></h2><p class="closing__date" data-bind="date.long">28 de noviembre de 2026</p></div><div class="closing__giant" aria-hidden="true">FOREVER</div></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/motion.js"></script>
+</body>
+</html>

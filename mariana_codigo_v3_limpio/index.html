@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="¡Ven a celebrar conmigo este día tan especial!">
+  <meta name="theme-color" content="#c95d82">
+  <title>Mariana Sosa| Mis XV Años</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1">
+</head>
+<body>
+  
+  <div class="envelope-overlay" id="envelopeOverlay" role="dialog" aria-label="Abrir invitación">
+    <button class="envelope-tap" id="envelopeTap" type="button" aria-label="Abrir invitación">
+      <img src="assets/envelope/tap.gif" alt="">
+    </button>
+    <img class="envelope-half envelope-half--left" id="envelopeLeft" src="assets/envelope/left.png" alt="">
+    <img class="envelope-half envelope-half--right" id="envelopeRight" src="assets/envelope/right.png" alt="">
+  </div>
+
+  <main class="invitation" id="invitation">
+    <section class="hero" aria-label="Portada">
+      <div class="hero-shade"></div>
+      <img class="decor decor--hero-tr" src="assets/decor/flowers-top-right.png" alt="">
+      <img class="decor decor--hero-bl" src="assets/decor/flowers-bottom-left.png" alt="">
+      <div class="hero-title" data-reveal="fade-up">
+        <h1 data-bind="event.honoree">Mariana</h1>
+        <p data-bind="event.subtitle">XV Años</p>
+        <p data-bind="event.subtitle2"></p>
+      </div>
+    </section>
+
+    <section class="paper-section message-section">
+      <img class="branch" src="assets/decor/branch.png" alt="">
+      <p class="message" data-bind="event.message" data-reveal="fade-up"></p>
+    </section>
+
+    <section class="paper-section date-family-section">
+      <img class="flower-corner flower-corner--left" src="assets/decor/flowers-left.png" alt="">
+      <img class="flower-corner flower-corner--familia" src="assets/decor/flowers-right.png" alt="">
+
+      <div class="date-line" data-reveal="fade-up">
+        <strong data-bind="event.day">17</strong><span>|</span><em data-bind="event.month">Octubre</em><span>|</span><strong data-bind="event.year">2026</strong>
+      </div>
+      <p class="small-label">Solo faltan:</p>
+      <div class="countdown" id="countdown" aria-label="Cuenta regresiva">
+        <div><strong id="days">00</strong><span>Días</span></div>
+        <div><strong id="hours">00</strong><span>Horas</span></div>
+        <div><strong id="minutes">00</strong><span>Minutos</span></div>
+        <div><strong id="seconds">00</strong><span>Segundos</span></div>
+      </div>
+
+      <img class="divider" src="assets/decor/divider.png" alt="">
+      <p class="eyebrow">Con la bendición de Dios<br>y en compañía de</p>
+      <h2 class="script-title">Mis padres:</h2>
+      <div class="names" id="parentsNames"></div>
+
+      <img class="divider" src="assets/decor/divider.png" alt="">
+      <p class="eyebrow">Con la presencia de</p>
+      <h2 class="script-title">Mis padrinos</h2>
+      <div class="names" id="godparentsNames"></div>
+    </section>
+
+    <section class="photo-break photo-break--save-date" aria-label="Save the date"></section>
+
+    <section class="paper-section details-section">
+      <img class="branch" src="assets/decor/branch.png" alt="">
+      <h2 class="script-title section-title" data-reveal="fade-up">Detalles</h2>
+
+      <article class="detail-block" data-reveal="fade-up">
+        <div class="round-icon"><img src="assets/icons/church.png" alt=""></div>
+        <div>
+          <h3>CEREMONIA:</h3>
+          <p data-bind="locations.ceremony.name"></p>
+        </div>
+      </article>
+      <article class="detail-block" data-reveal="fade-up">
+        <div class="round-icon"><img src="assets/icons/clock.png" alt=""></div>
+        <div>
+          <h3>HORA:</h3>
+          <p data-bind="locations.ceremony.time"></p>
+        </div>
+      </article>
+      <a class="button" data-bind-href="locations.ceremony.maps" target="_blank" rel="noopener">Ver Ubicación</a>
+
+      <img class="divider" src="assets/decor/divider.png" alt="">
+
+      <article class="detail-block" data-reveal="fade-up">
+        <div class="round-icon"><img src="assets/icons/location.png" alt=""></div>
+        <div>
+          <h3>RECEPCIÓN:</h3>
+          <p data-bind="locations.reception.name"></p>
+        </div>
+      </article>
+      <article class="detail-block" data-reveal="fade-up">
+        <div class="round-icon"><img src="assets/icons/clock.png" alt=""></div>
+        <div>
+          <h3>HORA:</h3>
+          <p data-bind="locations.reception.time"></p>
+        </div>
+      </article>
+      <a class="button" data-bind-href="locations.reception.maps" target="_blank" rel="noopener">Ver Ubicación</a>
+          <div class="yoyo">
+       <img  src="assets/images/venue.png">
+        </div>
+    </section>      
+    
+    <section class="paper-section itinerary-section">
+      <img class="flower-corner flower-corner--left-top" src="assets/decor/flowers-left.png" alt="">
+      <h2 class="script-title section-title" data-reveal="fade-up">Itinerario</h2>
+      <p class="lead">No te pierdas ningún detalle del evento</p>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="album-hero">
+      <div class="album-card" data-reveal="fade-up">
+        <img src="assets/icons/camera.png" alt="">
+        <h2 class="script-title">Álbum digital</h2>
+        <p>Comparte tus fotos y videos en este álbum</p>
+        <a class="button" id="albumButton" target="_blank" rel="noopener">Abrir álbum</a>
+      </div>
+    </section>
+
+    <section class="gallery-section" aria-label="Galería">
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <section class="paper-section hashtag-section">
+      <img class="flower-corner flower-corner--right" src="assets/decor/flowers-right.png" alt="">
+      <img class="flower-corner flower-corner--bottom-left" src="assets/decor/flowers-bottom-left-2.png" alt="">
+      <h2 class="script-title section-title">Hashtag</h2>
+      <img class="social-icon" src="assets/icons/social.png" alt="">
+      <p>Comparte conmigo todas tus fotografías del evento, usando el siguiente Hashtag</p>
+      <strong class="hashtag" data-bind="social.hashtag"></strong>
+      <p>en todas tus publicaciones de Facebook e Instagram</p>
+      <div class="social-row">
+        <img src="assets/icons/facebook.png" alt="Facebook">
+        <img src="assets/icons/instagram.png" alt="Instagram">
+      </div>
+    </section>
+
+    <section class="paper-section dresscode-section">
+      <h2 class="script-title section-title">Código de vestimenta</h2>
+      <img class="formal-icon" src="assets/icons/formal.png" alt="Vestimenta formal">
+      <p class="formal-word">FORMAL</p>
+    </section>
+
+    <section class="guest-section">
+      <div class="guest-card" id="guestCard" hidden>
+        <div class="guest-row" data-guest-row="Familia"><span>Invitación para:</span><strong data-guest="Familia"></strong></div>
+        <div class="guest-row" data-guest-row="Invitados"><span>Cantidad de invitados:</span><strong data-guest="Invitados"></strong></div>
+        <div class="guest-row" data-guest-row="Adultos"><span>Adultos:</span><strong data-guest="Adultos"></strong></div>
+        <div class="guest-row" data-guest-row="Adolescentes"><span>Adolescentes:</span><strong data-guest="Adolescentes"></strong></div>
+        <div class="guest-row" data-guest-row="Ninos"><span>Niños:</span><strong data-guest="Ninos"></strong></div>
+        <div class="guest-row" data-guest-row="Nombres"><span>Nombre de los invitados:</span><strong data-guest="Nombres"></strong></div>
+        <div class="guest-row" data-guest-row="Mesa"><span>Número de mesa:</span><strong data-guest="Mesa"></strong></div>
+      </div>
+    </section>
+
+    <section class="paper-section rsvp-section">
+      <h2 class="script-title section-title">Confirma tu asistencia</h2>
+      <div id="rsvpStatus" class="status" hidden></div>
+      <form id="rsvpForm" class="rsvp-form" hidden>
+        <input type="hidden" name="nombre" id="nombre">
+        <input type="hidden" name="id" id="idField">
+        <input type="hidden" name="mesa" id="mesaField">
+
+        <fieldset>
+          <legend>¿Asistirá?</legend>
+          <label><input type="radio" name="asistira" value="Si" required> Sí</label>
+          <label><input type="radio" name="asistira" value="No" required> No</label>
+        </fieldset>
+
+        <div id="attendanceDetails" hidden>
+          <label id="container-personas">Total Personas:<select name="cantidad_personas"></select></label>
+          <label id="container-adultos">Adultos:<select name="cantidad_adultos"></select></label>
+          <label id="container-adolescentes">Adolescentes:<select name="cantidad_adolescentes"></select></label>
+          <label id="container-ninos">Niños:<select name="cantidad_ninos"></select></label>
+          <label>Nombres de los asistentes:<textarea name="nombres_personas" rows="4"></textarea></label>
+        </div>
+
+        <label>Felicitaciones o comentarios:<textarea name="felicitaciones" rows="5"></textarea></label>
+        <button class="button submit-button" id="submitButton" type="submit">Confirmar</button>
+      </form>
+    </section>
+
+    <section class="closing-photo" aria-label="Mariana"></section>
+  </main>
+
+  <button class="music-button" id="musicButton" type="button" aria-label="Pausar música" aria-pressed="true">♫</button>
+  <audio id="audioPlayer" preload="none"></audio>
+
+  <dialog class="lightbox" id="lightbox">
+    <button class="lightbox-close" type="button" aria-label="Cerrar">×</button>
+    <button class="lightbox-prev" type="button" aria-label="Anterior">‹</button>
+    <img id="lightboxImage" alt="Fotografía de la galería">
+    <button class="lightbox-next" type="button" aria-label="Siguiente">›</button>
+  </dialog>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/envelope.js"></script>
+  <script src="js/music.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/gallery.js"></script>
+  <script src="js/guest.js"></script>
+  <script src="js/rsvp.js"></script>
+</body>
+</html>
