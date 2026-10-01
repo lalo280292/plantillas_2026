@@ -1,0 +1,407 @@
+/* Tipografías locales (carpeta /fonts): no dependen de internet */
+@font-face { font-family:'Pinyon Script'; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/pinyon-400.woff2) format('woff2'); }
+@font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:400; font-display:swap; src:url(fonts/cormorant-400-normal.woff2) format('woff2'); }
+@font-face { font-family:'Cormorant Garamond'; font-style:italic; font-weight:400; font-display:swap; src:url(fonts/cormorant-400-italic.woff2) format('woff2'); }
+@font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:500; font-display:swap; src:url(fonts/cormorant-500-normal.woff2) format('woff2'); }
+@font-face { font-family:'Cormorant Garamond'; font-style:normal; font-weight:600; font-display:swap; src:url(fonts/cormorant-600-normal.woff2) format('woff2'); }
+
+/* =========================================================
+   SOBRE CON IMÁGENES
+   Los colores, imágenes y posiciones se cambian desde CONFIG
+   en script.js.
+   ========================================================= */
+:root {
+  --fondo:    #2a211c;
+  --interior: #6f5c45;
+  --carta:    #fbf7ef;
+  --tinta:    #3b2b22;
+  --acento:   #a8844c;
+  --boton:    #8b1a2b;
+  --sello-texto: #4a0c16;
+
+  --font-script: 'Pinyon Script', cursive;
+  --font-serif:  'Cormorant Garamond', Georgia, serif;
+
+  --tex: none; /* textura de la carta: se genera en script.js */
+
+  /* Proporción de las imágenes (se ajusta sola al cargar la imagen) */
+  --ar: 1.7778;
+  --seal-x: var(--h-seal-x, 50%);
+  --seal-y: var(--h-seal-y, 53%);
+  --seal-w: var(--h-seal-w, 15%);
+  --hinge:  var(--h-hinge, 0%);
+}
+@media (orientation: portrait) {
+  :root {
+    --ar: .5625;
+    --seal-x: var(--v-seal-x, 50%);
+    --seal-y: var(--v-seal-y, 52%);
+    --seal-w: var(--v-seal-w, 30%);
+    --hinge:  var(--v-hinge, 0%);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 35%, color-mix(in srgb, var(--fondo), #fff 9%), var(--fondo) 70%);
+  background-color: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scene {
+  position: fixed;
+  inset: 0;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.scene.is-opening { cursor: default; }
+
+/* ---------- Cargando ---------- */
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  gap: 8px;
+  transform: translate(-50%, -50%);
+  transition: opacity .3s;
+}
+.loader span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--carta), transparent 40%);
+  animation: dot 1s infinite ease-in-out;
+}
+.loader span:nth-child(2) { animation-delay: .15s; }
+.loader span:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+.is-ready .loader { opacity: 0; pointer-events: none; }
+
+/* =========================================================
+   ESCENARIO: siempre cubre la pantalla sin deformarse
+   (como "object-fit: cover"): el ancho es el mayor entre
+   el ancho de la pantalla y el alto × proporción.
+   ========================================================= */
+.rig {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+  will-change: transform;
+  visibility: hidden;
+}
+.stage {
+  position: relative;
+  flex: none;
+  width: max(100vw, calc(100vh * var(--ar)));
+  width: max(100cqw, calc(100cqh * var(--ar)));
+  aspect-ratio: var(--ar);
+}
+
+.layer,
+.layer img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;   /* nunca estira la imagen */
+  pointer-events: none;
+}
+
+/* Interior del sobre */
+.env-interior {
+  position: absolute;
+  inset: 0.3%;
+  z-index: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,0) 45%),
+    var(--interior);
+  box-shadow: 0 40px 80px -25px rgba(0,0,0,.6), 0 14px 26px -12px rgba(0,0,0,.35);
+}
+
+.layer--pocket { z-index: 3; }
+
+/* Solapa */
+.flap {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  transform-origin: 50% var(--hinge, 0%);
+  will-change: transform;
+  pointer-events: none;
+}
+.flap-face--in { visibility: hidden; }
+
+/* =========================================================
+   SELLO
+   ========================================================= */
+.seal {
+  position: absolute;
+  left: var(--seal-x);
+  top: var(--seal-y);
+  width: var(--seal-w);
+  aspect-ratio: 1;
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+  pointer-events: none;
+}
+.seal-art,
+.frag,
+.frag-in {
+  position: absolute;
+  inset: 0;
+}
+.seal-art img,
+.frag-in img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.seal-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 2cqw;
+  font-family: var(--font-script);
+  font-size: calc(var(--seal-font, 34) * 1cqw);
+  line-height: 1;
+  color: var(--sello-texto);
+  text-shadow:
+    .35cqw .45cqw .2cqw rgba(255, 255, 255, .22),
+    -.25cqw -.3cqw .35cqw rgba(0, 0, 0, .45);
+  white-space: nowrap;
+}
+.seal-text:empty { display: none; }
+.frag { will-change: transform, opacity; }
+
+.hint {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin: .4em 0 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-align: center;
+  font-style: italic;
+  font-size: clamp(.95rem, 2.4vmin, 1.2rem);
+  letter-spacing: .18em;
+  color: color-mix(in srgb, var(--tinta), transparent 30%);
+}
+
+/* =========================================================
+   CARTA
+   ========================================================= */
+.letter {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 6%;
+  height: 86%;
+  z-index: 2;
+  overflow: hidden;
+  container-type: size;
+  border-radius: 3px;
+  background-color: var(--carta);
+  background-image: var(--tex);
+  background-size: 256px 256px;
+  box-shadow: 0 -2px 14px rgba(0,0,0,.18), 0 1px 2px rgba(0,0,0,.12);
+}
+
+.letter-cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 9cqh;
+  text-align: center;
+}
+.letter-cover::before {
+  content: "";
+  position: absolute;
+  inset: 3.2cqmin;
+  border: 1px solid color-mix(in srgb, var(--acento), transparent 35%);
+  outline: 1px solid color-mix(in srgb, var(--acento), transparent 65%);
+  outline-offset: -1.4cqmin;
+  pointer-events: none;
+}
+.cover-small {
+  margin: 0;
+  font-size: 3.4cqmin;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tinta), transparent 30%);
+}
+.cover-script {
+  margin: .2em 0 0;
+  font-family: var(--font-script);
+  font-size: 15cqmin;
+  line-height: 1.1;
+  color: var(--acento);
+}
+.cover-line {
+  width: 22cqmin;
+  height: 1px;
+  margin-top: 2cqmin;
+  background: linear-gradient(90deg, transparent, var(--acento), transparent);
+}
+
+/* La carta ya abierta a pantalla completa */
+.letter.is-open {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  z-index: 50;
+  border-radius: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  container-type: normal;
+  cursor: auto;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* =========================================================
+   CONTENIDO DE LA PÁGINA
+   ========================================================= */
+.page {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  padding: clamp(18px, 5vw, 64px) 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.letter.is-open .page {
+  position: relative;
+  min-height: 100%;
+  visibility: visible;
+}
+
+.page-frame {
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  padding: clamp(44px, 8vw, 88px) clamp(20px, 6vw, 72px);
+  text-align: center;
+  border: 1px solid color-mix(in srgb, var(--acento), transparent 40%);
+  outline: 1px solid color-mix(in srgb, var(--acento), transparent 70%);
+  outline-offset: -10px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: clamp(.8rem, 2.6vw, 1rem);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tinta), transparent 25%);
+}
+.title {
+  margin: .5em 0 0;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 5rem);
+  line-height: 1.1;
+  color: var(--acento);
+}
+.name {
+  margin: .05em 0 0;
+  font-weight: 500;
+  font-size: clamp(2.2rem, 8vw, 4.4rem);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.divider {
+  display: flex;
+  justify-content: center;
+  margin: 1.6rem auto;
+}
+.divider span {
+  position: relative;
+  width: min(240px, 60%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--acento), transparent);
+}
+.divider span::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  background: var(--acento);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.message {
+  max-width: 34em;
+  margin: 0 auto;
+  font-size: clamp(1.1rem, 3.6vw, 1.4rem);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.details {
+  display: grid;
+  gap: 14px;
+  margin: 2.4rem 0;
+}
+@media (orientation: landscape) and (min-width: 700px) {
+  .details { grid-template-columns: repeat(3, 1fr); }
+}
+.card {
+  padding: 1.2rem 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--acento), transparent 55%);
+  border-bottom: 1px solid color-mix(in srgb, var(--acento), transparent 55%);
+}
+.card h3 {
+  margin: 0 0 .4rem;
+  font-size: .85rem;
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+.card p {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.45;
+}
+
+.btn {
+  display: inline-block;
+  padding: .9em 2.2em;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--carta);
+  background: var(--boton);
+  border-radius: 999px;
+  box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--boton), transparent 20%);
+  transition: transform .2s ease;
+}
+.btn:hover { transform: translateY(-2px); }

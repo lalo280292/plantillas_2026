@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2a211c">
+  <title>Una carta para ti</title>
+  <!-- Tipografías (carpeta /fonts), imágenes (carpeta /img) y GSAP (gsap.min.js) son locales -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <main class="scene" id="scene" role="button" tabindex="0" aria-label="Sobre cerrado. Toca para abrir.">
+    <div class="loader" id="loader" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <!-- "rig": se mueve y escala SIEMPRE de forma proporcional (nunca deforma) -->
+    <div class="rig" id="rig">
+      <!-- "stage": tiene la misma proporción que las imágenes y cubre la pantalla -->
+      <div class="stage" id="stage">
+
+        <!-- Interior del sobre (se ve por la abertura al abrir) -->
+        <div class="env-interior"></div>
+
+        <!-- La carta -->
+        <article class="letter" id="letter">
+          <!-- Portada: lo que se ve cuando la carta sale del sobre -->
+          <div class="letter-cover" id="letterCover">
+            <p class="cover-small">Con cariño</p>
+            <p class="cover-script">Para ti</p>
+            <span class="cover-line"></span>
+          </div>
+
+          <!-- ===== CONTENIDO DE LA PÁGINA (edítalo libremente) ===== -->
+          <div class="page" id="page">
+            <div class="page-frame">
+              <p class="eyebrow reveal">Con mucha ilusión te invito a celebrar</p>
+              <h1 class="title reveal">Mis XV Años</h1>
+              <h2 class="name reveal">Valeria</h2>
+              <div class="divider reveal"><span></span></div>
+
+              <p class="message reveal">
+                Hay momentos que se guardan en el corazón para siempre.
+                Me encantaría que compartas conmigo este día tan especial.
+              </p>
+
+              <div class="details">
+                <section class="card reveal">
+                  <h3>Fecha</h3>
+                  <p>22 de noviembre</p>
+                </section>
+                <section class="card reveal">
+                  <h3>Ceremonia</h3>
+                  <p>6:00 pm<br>Nombre de la iglesia</p>
+                </section>
+                <section class="card reveal">
+                  <h3>Recepción</h3>
+                  <p>8:00 pm<br>Nombre del salón</p>
+                </section>
+              </div>
+
+              <a class="btn reveal" href="#">Confirmar asistencia</a>
+            </div>
+          </div>
+          <!-- ===== FIN DEL CONTENIDO ===== -->
+        </article>
+
+        <!-- IMAGEN 1: parte de abajo del sobre (bolsillo) -->
+        <picture class="layer layer--pocket">
+          <source id="srcPocketV" media="(orientation: portrait)">
+          <img id="imgPocket" alt="" draggable="false">
+        </picture>
+
+        <!-- IMAGEN 2: parte de arriba (solapa que se abre) -->
+        <div class="flap" id="flap">
+          <picture class="layer flap-face flap-face--out">
+            <source id="srcFlapV" media="(orientation: portrait)">
+            <img id="imgFlap" alt="" draggable="false">
+          </picture>
+          <picture class="layer flap-face flap-face--in" id="flapIn">
+            <source id="srcFlapInV" media="(orientation: portrait)">
+            <img id="imgFlapIn" alt="" draggable="false">
+          </picture>
+        </div>
+
+        <!-- IMAGEN 3: sello -->
+        <div class="seal" id="seal">
+          <div class="seal-art" id="sealArt">
+            <img id="imgSeal" alt="" draggable="false">
+            <span class="seal-text" id="sealText"></span>
+          </div>
+          <p class="hint" id="hint">Toca para abrir</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="gsap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
