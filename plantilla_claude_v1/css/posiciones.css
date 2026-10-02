@@ -1,0 +1,138 @@
+/* =====================================================================
+   📐  POSICIONES Y TAMAÑOS
+   ---------------------------------------------------------------------
+   Aquí mueves y cambias el tamaño de los elementos SIN tocar el resto
+   del diseño.
+
+   Unidades que verás:
+     px   = píxeles fijos
+     %    = porcentaje del contenedor
+     vw   = % del ANCHO de la pantalla   (10vw = 10% del ancho)
+     svh  = % del ALTO de la pantalla    (100svh = pantalla completa)
+     clamp(MIN, IDEAL, MAX) = crece con la pantalla pero sin pasar
+                              del mínimo ni del máximo.
+   ===================================================================== */
+
+:root {
+
+  /* ================= GENERAL ================= */
+  --ancho-contenido:      960px;   /* ancho máximo del contenido en computadora */
+  --ancho-texto:          560px;   /* ancho máximo de los párrafos */
+  --margen-lateral:       22px;    /* margen a los lados en celular */
+  --espacio-modulos:      clamp(72px, 15vw, 120px);  /* espacio arriba/abajo de cada módulo */
+  --alineacion-textos:    center;  /* center | left | right */
+  --espacio-titulo:       clamp(26px, 6vw, 44px);    /* espacio debajo de cada título */
+
+
+  /* ================= SOBRE =================
+     Los valores son % de la imagen del sobre.
+     "vertical" = celular · "horizontal" = computadora               */
+  --sello-x-vertical:          50%;
+  --sello-y-vertical:          53%;
+  --sello-tamano-vertical:     30%;   /* ancho del sello */
+  --sobre-textos-y-vertical:   65%;   /* dónde empiezan los textos del sobre */
+
+  --sello-x-horizontal:        50%;
+  --sello-y-horizontal:        54%;
+  --sello-tamano-horizontal:   13%;
+  --sobre-textos-y-horizontal: 69%;
+
+
+  /* ================= PORTADA ================= */
+  --portada-altura:           100svh;        /* 100svh = pantalla completa */
+  --portada-foto-posicion:    center 35%;    /* qué parte de la foto se ve: horizontal vertical */
+  --portada-textos-abajo:     12svh;         /* distancia de los nombres al borde inferior */
+  --portada-alineacion:       center;        /* center | left | right */
+
+
+  /* ================= NOVIOS ================= */
+  --novios-foto-tamano:       clamp(170px, 52vw, 230px);
+
+
+  /* ================= PARALLAX ================= */
+  --parallax-altura:          100svh;
+  --parallax-foto-posicion:   center center;
+
+
+  /* ================= PADRES Y PADRINOS ================= */
+  --padres-foto-tamano:       120px;
+  --padres-ancho-minimo:      220px;   /* ancho mínimo de cada grupo (define las columnas) */
+  --padrinos-foto-tamano:     100px;
+  --padrinos-ancho-minimo:    140px;   /* 140px = 2 columnas en celular */
+
+
+  /* ================= MISA Y RECEPCIÓN ================= */
+  --lugar-forma-foto:         999px 999px 14px 14px;   /* forma de arco. Para recta: 14px */
+  --lugar-proporcion-foto:    4 / 3;
+
+
+  /* ================= ITINERARIO ================= */
+  --itinerario-linea-x:       32px;    /* posición de la línea en celular */
+  --itinerario-icono:         58px;    /* tamaño de los círculos con iconos */
+
+
+  /* ================= ÁLBUM ================= */
+  --album-giro-foto:          -3deg;   /* inclinación de la foto tipo polaroid (0deg = recta) */
+
+
+  /* ================= GALERÍA ================= */
+  --galeria-columnas-celular:       2;
+  --galeria-columnas-computadora:   5;
+  --galeria-espacio:                8px;
+  --galeria-forma:                  6px;    /* redondeo de las esquinas */
+
+
+  /* ================= HOJAS DE LOS COSTADOS ================= */
+  --hoja-ancho:        clamp(95px, 27vw, 220px);
+  --hoja-arriba:       4%;       /* distancia desde arriba del módulo */
+  --hoja-salida:       -7%;      /* cuánto se salen de la pantalla (más negativo = más afuera) */
+  --hoja-opacidad:     .9;
+
+
+  /* ================= FOTO FINAL ================= */
+  --final-altura:             100svh;
+  --final-foto-posicion:      center center;
+  --final-textos-abajo:       14svh;
+
+
+  /* ================= BOTÓN DE MÚSICA ================= */
+  --musica-abajo:             18px;
+  --musica-derecha:           18px;
+}
+
+
+/* =====================================================================
+   AJUSTES DE UN SOLO MÓDULO
+   ---------------------------------------------------------------------
+   Puedes cambiar cualquier variable de arriba SOLO en un módulo,
+   escribiendo  #nombre-del-modulo { ... }
+   Los nombres son los mismos de la lista "modulos" en js/datos.js
+   ===================================================================== */
+
+#padres     { --hoja-arriba: 10%; }
+#vestimenta { --hoja-arriba: 30%; }
+#formulario { --hoja-arriba: 55%; }
+
+
+/* =====================================================================
+   MOVER UN ELEMENTO A MANO
+   ---------------------------------------------------------------------
+   Usa  position: relative;  con  top / left  (números negativos suben
+   o mueven a la izquierda). Ejemplo:
+
+     #novios .nombre-novio { position: relative; top: -6px; }
+
+   Clases principales de cada módulo:
+     portada:     .portada__nombres  .portada__fecha  .portada__contenido
+     novios:      .novio-tarjeta  .nombre-novio  .mensaje  .novios__y
+     padres:      .persona  .persona__nombres
+     fecha:       .fecha-grande  .contador  .contador__caja
+     misa/recep.: .lugar  .lugar__foto  .lugar__nombre  .lugar__direccion
+     itinerario:  .itinerario__item  .itinerario__tarjeta
+     galería:     .galeria  .galeria__item
+     regalos:     .tarjeta  .datos-banco
+     invitados:   .pase  .pase__nombre
+     formulario:  .formulario  .campo
+     final:       .final__contenido  .final__titulo
+     todos:       .titulo  .divisor  .etiqueta  .texto  .boton  .hoja
+   ===================================================================== */

@@ -1,0 +1,64 @@
+/* =====================================================================
+   🎨  COLORES
+   ---------------------------------------------------------------------
+   Cambia aquí los colores de toda la invitación.
+   Escribe el color en formato #RRGGBB (puedes buscar "selector de color"
+   en Google para obtener el código de cualquier color).
+
+   Paleta actual: neutros cálidos (marfil, lino, arena) + verde olivo.
+   ===================================================================== */
+
+:root {
+
+  /* ---------- FONDOS ---------- */
+  --color-fondo:            #f7f3ec;   /* fondo general (marfil) */
+  --color-fondo-alterno:    #efe9de;   /* fondo de módulos alternos (lino) */
+  --color-tarjeta:          #fffdf8;   /* fondo de tarjetas y cajas */
+  --color-oscuro:           #2f3222;   /* fondo oscuro (pie de página, visor de fotos) */
+
+  /* ---------- TEXTOS ---------- */
+  --color-texto:            #3d3a32;   /* texto principal */
+  --color-texto-suave:      #7a7466;   /* textos secundarios, direcciones, notas */
+  --color-titulos:          #5f6640;   /* títulos en letra manuscrita */
+  --color-texto-sobre-foto: #ffffff;   /* texto encima de fotos (portada, parallax, final) */
+
+  /* ---------- ACENTO (verde olivo) ---------- */
+  --color-acento:           #6f7547;   /* color principal de detalles */
+  --color-acento-oscuro:    #4d5232;   /* hover de botones, números del contador */
+  --color-acento-claro:     #a9ad86;   /* líneas, bordes, puntos del itinerario */
+  --color-acento-suave:     #e6e7d8;   /* círculos detrás de iconos */
+
+  /* ---------- DETALLES NEUTROS ---------- */
+  --color-arena:            #c8b99c;   /* líneas finas, marcos de fotos */
+  --color-borde:            #e2dacb;   /* bordes de tarjetas y campos */
+
+  /* ---------- BOTONES ---------- */
+  --color-boton:            #6f7547;
+  --color-boton-texto:      #ffffff;
+  --color-boton-hover:      #4d5232;
+
+  /* ---------- SOBRE ---------- */
+  --color-sobre-fondo:      #e9e3d6;   /* lo que se ve alrededor del sobre */
+  --color-sobre-interior:   #5f6640;   /* el interior del sobre al abrirse */
+  --color-sobre-texto:      #5a5446;   /* texto escrito sobre el sobre */
+  --color-sello-texto:      #f4efe2;   /* iniciales dentro del sello */
+
+  /* El sello original es rojo. Este filtro lo convierte a verde olivo.
+     - Para dejarlo con su color original escribe:  none
+     - Para otros tonos cambia el número de hue-rotate (0 a 360) */
+  --filtro-sello:           hue-rotate(78deg) saturate(.45) brightness(1.15);
+
+  /* ---------- ICONOS ----------
+     Los iconos se muestran dentro de un círculo de color --color-acento-suave.
+     Si descargas iconos negros o de otro color y los quieres BLANCOS,
+     cambia "none" por:  brightness(0) invert(1)                         */
+  --filtro-icono:           none;
+  --filtro-icono-boton:     brightness(0) invert(1);  /* iconos dentro de botones (blancos) */
+
+  /* ---------- SOMBRAS Y CAPAS ---------- */
+  --sombra-suave:   0 10px 30px -12px rgba(61, 58, 50, .18);
+  --sombra-foto:    0 18px 40px -18px rgba(47, 50, 34, .45);
+  --capa-portada:   linear-gradient(to bottom, rgba(0,0,0,.05) 35%, rgba(31,33,22,.72) 100%);
+  --capa-parallax:  rgba(31, 33, 22, .30);  /* oscurece fotos parallax para leer el texto */
+  --capa-final:     rgba(31, 33, 22, .45);
+}

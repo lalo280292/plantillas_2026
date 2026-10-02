@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es" class="cargando">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- =================================================================
+       ✏️ EDITA AQUÍ: título y vista previa al compartir por WhatsApp.
+       (WhatsApp/Facebook leen esto directo del HTML, por eso no está en datos.js)
+       La imagen de vista previa debe ser una URL completa cuando publiques
+       la invitación, ej: https://tusitio.com/sofia-mateo/fotos/portada-1.jpg
+       ================================================================= -->
+  <title>Sofía & Mateo · Nuestra boda</title>
+  <meta name="description" content="Te invitamos a celebrar nuestra boda el 17 de abril de 2027.">
+  <meta property="og:title" content="Sofía & Mateo · Nuestra boda">
+  <meta property="og:description" content="Sábado 17 de abril de 2027 · Tepoztlán, Morelos">
+  <meta property="og:image" content="fotos/portada-1.jpg">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#6f7547">
+  <!-- ================================================================= -->
+
+  <link rel="stylesheet" href="css/tipografias.css">
+  <link rel="stylesheet" href="css/colores.css">
+  <link rel="stylesheet" href="css/posiciones.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <noscript><style>html.cargando body { visibility: visible; } .sobre { display: none; }</style></noscript>
+</head>
+<body>
+
+<!-- =====================================================================
+     GUÍA RÁPIDA DE ESTE ARCHIVO
+     Normalmente NO necesitas editar este archivo: los textos, fotos y
+     links se cambian en js/datos.js.
+     · data-texto="..."   → el texto viene de datos.js
+     · data-imagen="..."  → la foto viene de datos.js
+     · data-enlace="..."  → el link viene de datos.js
+     · data-anim          → este elemento tiene animación al aparecer
+     ===================================================================== -->
+
+
+<!-- ============================ SOBRE ============================ -->
+<div class="sobre" id="sobre" data-modulo="sobre" role="button" tabindex="0" aria-label="Abrir invitación">
+  <div class="sobre__escenario">
+    <div class="sobre__interior"></div>
+    <picture class="sobre__capa sobre__abajo">
+      <source media="(orientation: landscape)" data-srcset="sobre.imagenes.abajoHorizontal">
+      <img data-imagen="sobre.imagenes.abajoVertical" alt="" draggable="false">
+    </picture>
+    <div class="sobre__solapa">
+      <picture class="sobre__capa">
+        <source media="(orientation: landscape)" data-srcset="sobre.imagenes.arribaHorizontal">
+        <img data-imagen="sobre.imagenes.arribaVertical" alt="" draggable="false">
+      </picture>
+    </div>
+    <div class="sobre__textos">
+      <p class="sobre__titulo" data-texto="sobre.titulo"></p>
+      <p class="sobre__para" data-texto="sobre.para"></p>
+      <p class="sobre__invitado" data-invitado-nombre></p>
+      <p class="sobre__ayuda" data-texto="sobre.textoAyuda"></p>
+    </div>
+    <span class="sobre__sello">
+      <img data-imagen="sobre.imagenes.sello" alt="" draggable="false">
+      <span class="sobre__iniciales" data-texto="sobre.iniciales"></span>
+    </span>
+  </div>
+</div>
+
+
+<main id="invitacion">
+
+  <!-- ============================ PORTADA ============================ -->
+  <section class="modulo portada" id="portada" data-modulo="portada">
+    <div class="portada__fotos" data-portada-fotos></div>
+    <div class="portada__capa"></div>
+    <div class="portada__contenido">
+      <p class="etiqueta" data-texto="portada.antesDeNombres" data-anim data-retraso="0.3"></p>
+      <h1 class="portada__nombres" data-texto="portada.nombres" data-anim data-retraso="0.6"></h1>
+      <p class="portada__fecha" data-texto="portada.fechaCorta" data-anim data-retraso="1.4"></p>
+    </div>
+    <div class="portada__puntos" data-portada-puntos></div>
+    <a class="portada__bajar" href="#" aria-label="Ver más" data-anim="flotar">
+      <img src="iconos/flecha-abajo.svg" alt="">
+    </a>
+  </section>
+
+  <!-- ============================ FRASE ============================ -->
+  <section class="modulo" id="frase" data-modulo="frase">
+    <div class="contenedor">
+      <img class="divisor" style="margin: 0 auto 20px" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      <p class="frase__texto" data-texto="frase.texto" data-anim></p>
+      <p class="etiqueta" data-texto="frase.autor" data-anim></p>
+    </div>
+  </section>
+
+  <!-- ============================ NOVIOS ============================ -->
+  <section class="modulo" id="novios" data-modulo="novios">
+    <div class="contenedor">
+      <header class="encabezado">
+        <h2 class="titulo" data-texto="novios.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <div class="novios">
+        <article class="novio-tarjeta" data-si="novios.novia">
+          <div class="foto-circulo" data-anim="circulo"><img data-imagen="novios.novia.foto" alt=""></div>
+          <p class="etiqueta" data-texto="novios.novia.rol" data-anim></p>
+          <h3 class="nombre-novio" data-texto="novios.novia.nombre" data-anim></h3>
+          <p class="mensaje" data-texto="novios.novia.mensaje" data-anim></p>
+        </article>
+        <div class="novios__y" data-anim="rebote">&amp;</div>
+        <article class="novio-tarjeta" data-si="novios.novio">
+          <div class="foto-circulo" data-anim="circulo"><img data-imagen="novios.novio.foto" alt=""></div>
+          <p class="etiqueta" data-texto="novios.novio.rol" data-anim></p>
+          <h3 class="nombre-novio" data-texto="novios.novio.nombre" data-anim></h3>
+          <p class="mensaje" data-texto="novios.novio.mensaje" data-anim></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PARALLAX 1 ============================ -->
+  <section class="modulo parallax" id="parallax1" data-modulo="parallax1">
+    <div class="parallax__marco" data-parallax><img class="parallax__img" data-imagen="parallax1.foto" alt=""></div>
+    <div class="parallax__capa"></div>
+    <p class="parallax__texto" data-texto="parallax1.texto" data-anim></p>
+  </section>
+
+  <!-- ============================ PADRES ============================ -->
+  <section class="modulo" id="padres" data-modulo="padres">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/familia.svg" alt=""></span>
+        <h2 class="titulo" data-texto="padres.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="padres.texto" data-anim></p>
+      <div class="personas" data-lista="padres.lista">
+        <template>
+          <article class="persona" data-anim>
+            <div class="foto-circulo"><img data-imagen="foto" alt=""></div>
+            <p class="etiqueta" data-texto="titulo"></p>
+            <p class="persona__nombres" data-texto="nombres"></p>
+          </article>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PADRINOS ============================ -->
+  <section class="modulo" id="padrinos" data-modulo="padrinos">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/anillos.svg" alt=""></span>
+        <h2 class="titulo" data-texto="padrinos.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="padrinos.texto" data-anim></p>
+      <div class="personas personas--padrinos" data-lista="padrinos.lista">
+        <template>
+          <article class="persona" data-anim>
+            <div class="foto-circulo"><img data-imagen="foto" alt=""></div>
+            <p class="etiqueta" data-texto="rol"></p>
+            <p class="persona__nombres" data-texto="nombres"></p>
+          </article>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FECHA ============================ -->
+  <section class="modulo" id="fecha" data-modulo="fecha">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/calendario.svg" alt=""></span>
+        <h2 class="titulo" data-texto="fecha.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <div class="fecha-grande">
+        <span class="fecha-grande__lado" data-texto="fecha.diaSemana" data-anim="izquierda"></span>
+        <span class="fecha-grande__dia" data-texto="fecha.dia" data-anim></span>
+        <span class="fecha-grande__lado" data-texto="fecha.mes" data-anim="derecha"></span>
+      </div>
+      <p class="fecha-anio" data-texto="fecha.anio" data-anim></p>
+      <p class="fecha-hora" data-anim><img class="icono-linea" src="iconos/reloj.svg" alt=""><span data-texto="fecha.hora"></span></p>
+
+      <p class="etiqueta" data-texto="fecha.textoContador" data-anim></p>
+      <div class="contador" data-contador data-anim>
+        <div class="contador__caja"><span class="contador__num" data-contador-parte="dias">00</span><span class="contador__etq" data-texto="fecha.etiquetas.dias"></span></div>
+        <div class="contador__caja"><span class="contador__num" data-contador-parte="horas">00</span><span class="contador__etq" data-texto="fecha.etiquetas.horas"></span></div>
+        <div class="contador__caja"><span class="contador__num" data-contador-parte="minutos">00</span><span class="contador__etq" data-texto="fecha.etiquetas.minutos"></span></div>
+        <div class="contador__caja"><span class="contador__num" data-contador-parte="segundos">00</span><span class="contador__etq" data-texto="fecha.etiquetas.segundos"></span></div>
+      </div>
+      <p class="contador__final" data-contador-final hidden></p>
+
+      <div class="botones" data-anim>
+        <button class="boton" type="button" data-calendario-abrir>
+          <img class="boton__icono" src="iconos/calendario.svg" alt=""><span data-texto="fecha.botonCalendario"></span>
+        </button>
+      </div>
+      <div class="botones calendario-opciones" data-calendario-opciones hidden>
+        <a class="boton boton--borde boton--chico" data-calendario-google target="_blank" rel="noopener">Google Calendar</a>
+        <a class="boton boton--borde boton--chico" data-calendario-ics download="evento.ics">Apple / Outlook</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ MISA ============================ -->
+  <section class="modulo" id="misa" data-modulo="misa">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-si="misa.icono" data-anim><img data-imagen="misa.icono" alt=""></span>
+        <h2 class="titulo" data-texto="misa.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <article class="lugar">
+        <div class="lugar__foto" data-si="misa.foto" data-anim="cortina"><img data-imagen="misa.foto" alt="" loading="lazy"></div>
+        <div class="lugar__info">
+          <h3 class="lugar__nombre" data-texto="misa.nombre" data-anim></h3>
+          <p class="lugar__hora" data-anim><img class="icono-linea" src="iconos/reloj.svg" alt=""><span data-texto="misa.hora"></span></p>
+          <p class="lugar__direccion" data-texto="misa.direccion" data-anim></p>
+          <div class="botones" data-anim>
+            <a class="boton" data-enlace="misa.mapa" target="_blank" rel="noopener">
+              <img class="boton__icono" src="iconos/ubicacion.svg" alt=""><span data-texto="misa.boton"></span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================ RECEPCIÓN ============================ -->
+  <section class="modulo" id="recepcion" data-modulo="recepcion">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-si="recepcion.icono" data-anim><img data-imagen="recepcion.icono" alt=""></span>
+        <h2 class="titulo" data-texto="recepcion.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <article class="lugar">
+        <div class="lugar__foto" data-si="recepcion.foto" data-anim="cortina"><img data-imagen="recepcion.foto" alt="" loading="lazy"></div>
+        <div class="lugar__info">
+          <h3 class="lugar__nombre" data-texto="recepcion.nombre" data-anim></h3>
+          <p class="lugar__hora" data-anim><img class="icono-linea" src="iconos/reloj.svg" alt=""><span data-texto="recepcion.hora"></span></p>
+          <p class="lugar__direccion" data-texto="recepcion.direccion" data-anim></p>
+          <div class="botones" data-anim>
+            <a class="boton" data-enlace="recepcion.mapa" target="_blank" rel="noopener">
+              <img class="boton__icono" src="iconos/ubicacion.svg" alt=""><span data-texto="recepcion.boton"></span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================ ITINERARIO ============================ -->
+  <section class="modulo" id="itinerario" data-modulo="itinerario">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/reloj.svg" alt=""></span>
+        <h2 class="titulo" data-texto="itinerario.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <!-- La animación del itinerario es especial: está en js/animaciones.js → EFECTOS.itinerario -->
+      <div class="itinerario" data-itinerario>
+        <div class="itinerario__linea"><span class="itinerario__progreso"></span></div>
+        <ol class="itinerario__lista" data-lista="itinerario.lista">
+          <template>
+            <li class="itinerario__item">
+              <div class="itinerario__icono icono-circulo"><img data-imagen="icono" alt=""></div>
+              <div class="itinerario__tarjeta">
+                <p class="itinerario__hora" data-texto="hora"></p>
+                <h3 class="itinerario__titulo" data-texto="titulo"></h3>
+                <p class="itinerario__texto" data-texto="texto"></p>
+              </div>
+            </li>
+          </template>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ PARALLAX 2 ============================ -->
+  <section class="modulo parallax" id="parallax2" data-modulo="parallax2">
+    <div class="parallax__marco" data-parallax><img class="parallax__img" data-imagen="parallax2.foto" alt=""></div>
+    <div class="parallax__capa"></div>
+    <p class="parallax__texto" data-texto="parallax2.texto" data-anim></p>
+  </section>
+
+  <!-- ============================ ÁLBUM DIGITAL ============================ -->
+  <section class="modulo" id="album" data-modulo="album">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-si="album.icono" data-anim><img data-imagen="album.icono" alt=""></span>
+        <h2 class="titulo" data-texto="album.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <div class="album">
+        <div class="album__foto" data-si="album.foto" data-anim="girar">
+          <div class="album__polaroid"><img data-imagen="album.foto" alt="" loading="lazy"></div>
+        </div>
+        <div class="album__info">
+          <p class="texto" data-texto="album.texto" data-anim></p>
+          <p class="hashtag" data-texto="album.hashtag" data-anim></p>
+          <div class="botones" data-anim>
+            <a class="boton" data-enlace="album.enlace" target="_blank" rel="noopener">
+              <img class="boton__icono" src="iconos/camara.svg" alt=""><span data-texto="album.boton"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ GALERÍA ============================ -->
+  <section class="modulo" id="galeria" data-modulo="galeria">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/album.svg" alt=""></span>
+        <h2 class="titulo" data-texto="galeria.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="galeria.texto" data-anim></p>
+      <div class="galeria" data-galeria data-lista="galeria.fotos">
+        <template>
+          <button class="galeria__item" type="button" aria-label="Ver foto" data-anim>
+            <img data-imagen="." alt="" loading="lazy">
+          </button>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CÓDIGO DE VESTIMENTA ============================ -->
+  <section class="modulo" id="vestimenta" data-modulo="vestimenta">
+    <div class="contenedor">
+      <header class="encabezado">
+        <h2 class="titulo" data-texto="vestimenta.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="vestimenta__tipo" data-texto="vestimenta.tipo" data-anim></p>
+      <div class="vestimenta">
+        <div class="vestimenta__opcion" data-si="vestimenta.mujeres" data-anim>
+          <span class="icono-circulo"><img data-imagen="vestimenta.mujeres.icono" alt=""></span>
+          <h3 data-texto="vestimenta.mujeres.titulo"></h3>
+          <p data-texto="vestimenta.mujeres.texto"></p>
+        </div>
+        <div class="vestimenta__opcion" data-si="vestimenta.hombres" data-anim>
+          <span class="icono-circulo"><img data-imagen="vestimenta.hombres.icono" alt=""></span>
+          <h3 data-texto="vestimenta.hombres.titulo"></h3>
+          <p data-texto="vestimenta.hombres.texto"></p>
+        </div>
+      </div>
+      <p class="nota" data-texto="vestimenta.nota" data-anim></p>
+      <div class="paleta" data-si="vestimenta.paleta" data-anim>
+        <p class="etiqueta" data-texto="vestimenta.textoPaleta"></p>
+        <div class="paleta__colores" data-lista="vestimenta.paleta">
+          <template><span class="paleta__color" data-color="."></span></template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ REGALOS ============================ -->
+  <section class="modulo" id="regalos" data-modulo="regalos">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/regalo.svg" alt=""></span>
+        <h2 class="titulo" data-texto="regalos.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="regalos.texto" data-anim></p>
+      <div class="tarjetas" data-lista="regalos.lista">
+        <template>
+          <article class="tarjeta" data-anim>
+            <span class="icono-circulo" data-si="icono"><img data-imagen="icono" alt=""></span>
+            <h3 class="tarjeta__titulo" data-texto="titulo"></h3>
+            <p class="tarjeta__texto" data-texto="texto"></p>
+            <p class="regalo__numero" data-texto="numero"></p>
+            <dl class="datos-banco" data-lista="filas">
+              <template>
+                <div class="datos-banco__fila">
+                  <dt data-texto="etiqueta"></dt>
+                  <dd>
+                    <span data-texto="valor"></span>
+                    <button class="copiar" type="button" data-si="copiar" data-copiar="valor">
+                      <img src="iconos/copiar.svg" alt=""><span>Copiar</span>
+                    </button>
+                  </dd>
+                </div>
+              </template>
+            </dl>
+            <div class="botones" data-si="enlace">
+              <a class="boton" data-enlace="enlace" target="_blank" rel="noopener">
+                <img class="boton__icono" src="iconos/regalo.svg" alt=""><span data-texto="boton"></span>
+              </a>
+            </div>
+          </article>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HOSPEDAJE ============================ -->
+  <section class="modulo" id="hospedaje" data-modulo="hospedaje">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/maleta.svg" alt=""></span>
+        <h2 class="titulo" data-texto="hospedaje.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="hospedaje.texto" data-anim></p>
+      <div class="tarjetas" data-lista="hospedaje.lista">
+        <template>
+          <article class="tarjeta" data-anim>
+            <span class="icono-circulo" data-si="icono"><img data-imagen="icono" alt=""></span>
+            <h3 class="tarjeta__titulo" data-texto="nombre"></h3>
+            <p class="tarjeta__texto" data-texto="texto"></p>
+            <p class="hotel__dato" data-si="direccion"><img class="icono-linea" src="iconos/ubicacion.svg" alt=""><span data-texto="direccion"></span></p>
+            <p class="hotel__dato" data-si="telefono"><img class="icono-linea" src="iconos/telefono.svg" alt=""><a data-texto="telefono" data-telefono="telefono"></a></p>
+            <p class="hotel__codigo" data-texto="codigo"></p>
+            <div class="botones">
+              <a class="boton boton--chico" data-enlace="reservar" target="_blank" rel="noopener">
+                <img class="boton__icono" src="iconos/hotel.svg" alt=""><span data-texto="/hospedaje.botonReservar"></span>
+              </a>
+              <a class="boton boton--borde boton--chico" data-enlace="mapa" target="_blank" rel="noopener">
+                <img class="boton__icono" src="iconos/ubicacion.svg" alt=""><span data-texto="/hospedaje.botonMapa"></span>
+              </a>
+            </div>
+          </article>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ INVITADOS ============================ -->
+  <section class="modulo" id="invitados" data-modulo="invitados">
+    <div class="contenedor">
+      <header class="encabezado">
+        <h2 class="titulo" data-texto="invitados.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <div class="pase" data-anim>
+        <span class="icono-circulo"><img src="iconos/personas.svg" alt=""></span>
+        <p class="etiqueta" data-texto="invitados.textoAntes"></p>
+        <p class="pase__nombre" data-invitado-nombre></p>
+        <span class="pase__linea"></span>
+        <p class="pase__pases" data-invitado-pases></p>
+      </div>
+      <p class="nota nota--icono" data-si="invitados.nota" data-anim>
+        <img class="icono-linea" src="iconos/ninos.svg" alt=""><span data-texto="invitados.nota"></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================ CONFIRMAR ASISTENCIA ============================ -->
+  <section class="modulo" id="confirmar" data-modulo="confirmar">
+    <div class="contenedor">
+      <header class="encabezado">
+        <span class="icono-circulo" data-anim><img src="iconos/check.svg" alt=""></span>
+        <h2 class="titulo" data-texto="confirmar.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="confirmar.texto" data-anim></p>
+      <div class="botones">
+        <a class="boton" href="#formulario" data-si="/modulos.formulario" data-anim>
+          <img class="boton__icono" src="iconos/pluma.svg" alt=""><span data-texto="confirmar.boton"></span>
+        </a>
+        <a class="boton boton--borde" data-confirmar-whatsapp data-si="confirmar.botonWhatsapp" target="_blank" rel="noopener" data-anim>
+          <img class="boton__icono" src="iconos/whatsapp.svg" alt=""><span data-texto="confirmar.botonWhatsapp"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FORMULARIO ============================ -->
+  <section class="modulo" id="formulario" data-modulo="formulario">
+    <div class="contenedor">
+      <header class="encabezado">
+        <h2 class="titulo" data-texto="formulario.titulo" data-anim></h2>
+        <img class="divisor" data-imagen="tematica.divisor" alt="" data-anim="linea">
+      </header>
+      <p class="texto" data-texto="formulario.texto" data-anim></p>
+
+      <form class="formulario tarjeta" id="form-confirmacion" novalidate data-anim>
+        <label class="campo">
+          <span data-texto="formulario.etiquetas.nombre"></span>
+          <input name="nombre" type="text" autocomplete="name" required>
+        </label>
+        <fieldset class="campo">
+          <legend data-texto="formulario.etiquetas.asistencia"></legend>
+          <div class="opciones">
+            <label class="opcion"><input type="radio" name="asistencia" value="si" checked><span data-texto="formulario.etiquetas.si"></span></label>
+            <label class="opcion"><input type="radio" name="asistencia" value="no"><span data-texto="formulario.etiquetas.no"></span></label>
+          </div>
+        </fieldset>
+        <label class="campo" data-campo-personas>
+          <span data-texto="formulario.etiquetas.personas"></span>
+          <select name="personas"></select>
+        </label>
+        <label class="campo" data-si="formulario.etiquetas.telefono">
+          <span data-texto="formulario.etiquetas.telefono"></span>
+          <input name="telefono" type="tel" autocomplete="tel">
+        </label>
+        <label class="campo" data-si="formulario.etiquetas.mensaje">
+          <span data-texto="formulario.etiquetas.mensaje"></span>
+          <textarea name="mensaje" rows="3"></textarea>
+        </label>
+        <p class="formulario__error" data-form-error hidden></p>
+        <button class="boton boton--ancho" type="submit">
+          <img class="boton__icono" src="iconos/sobre.svg" alt=""><span data-texto="formulario.etiquetas.boton"></span>
+        </button>
+      </form>
+
+      <div class="formulario__gracias tarjeta" data-form-gracias hidden>
+        <span class="icono-circulo"><img src="iconos/corazon.svg" alt=""></span>
+        <p class="texto" data-texto="formulario.gracias"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FOTO FINAL ============================ -->
+  <section class="modulo final" id="final" data-modulo="final">
+    <div class="parallax__marco" data-parallax><img class="parallax__img" data-imagen="final.foto" alt=""></div>
+    <div class="parallax__capa"></div>
+    <div class="final__contenido">
+      <h2 class="titulo final__titulo" data-texto="final.titulo" data-anim></h2>
+      <p class="final__texto" data-texto="final.texto" data-anim></p>
+      <p class="final__firma" data-texto="final.firma" data-anim></p>
+    </div>
+  </section>
+
+  <!-- ============================ PIE DE PÁGINA ============================ -->
+  <footer class="pie" id="pie" data-modulo="pie">
+    <p><a data-enlace="pie.enlace" target="_blank" rel="noopener"><span data-texto="pie.texto"></span></a><span data-texto="pie.texto" data-pie-sin-enlace></span></p>
+  </footer>
+
+</main>
+
+
+<!-- ============================ VISOR DE FOTOS (galería) ============================ -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Foto en pantalla completa" hidden>
+  <img class="visor__img" alt="">
+  <button class="visor__boton visor__cerrar" type="button" aria-label="Cerrar">×</button>
+  <button class="visor__boton visor__anterior" type="button" aria-label="Foto anterior">‹</button>
+  <button class="visor__boton visor__siguiente" type="button" aria-label="Foto siguiente">›</button>
+  <p class="visor__contador"></p>
+</div>
+
+<!-- ============================ MÚSICA ============================ -->
+<button class="musica" id="musica" data-modulo="musica" type="button" aria-label="Música" hidden>
+  <img src="iconos/musica.svg" alt="">
+</button>
+<audio id="audio" loop preload="none"></audio>
+
+
+<!-- Librerías (no cambiar el orden) -->
+<script src="librerias/gsap.min.js"></script>
+<script src="librerias/ScrollTrigger.min.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/animaciones.js"></script>
+<script src="js/animaciones-nuevas.js"></script>
+<script src="js/nucleo.js"></script>
+</body>
+</html>

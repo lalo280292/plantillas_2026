@@ -1,0 +1,68 @@
+/* =====================================================================
+   ✒️  TIPOGRAFÍAS
+   ---------------------------------------------------------------------
+   PASO 1 · Las fuentes se cargan desde la carpeta /fuentes (funcionan
+            sin internet).
+   PASO 2 · Elige qué fuente usa cada tipo de texto en ":root" (abajo).
+   PASO 3 · Ajusta los tamaños si lo necesitas.
+
+   ¿Quieres usar una fuente de Google Fonts?
+     1. Entra a fonts.google.com, elige la fuente y copia su línea
+        @import (opción "@import" al compartir). Pégala aquí ABAJO,
+        en la primera línea de este archivo. Ejemplo:
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+     2. Cambia el nombre en la variable, ej:  --fuente-titulos: 'Great Vibes', cursive;
+   ===================================================================== */
+
+
+/* ---------- FUENTES LOCALES (carpeta /fuentes) ---------- */
+
+/* Pinyon Script → manuscrita elegante (nombres y títulos) */
+@font-face { font-family: 'Pinyon Script'; font-weight: 400; font-style: normal; font-display: swap;
+  src: url(../fuentes/pinyon-400.woff2) format('woff2'); }
+
+/* Italianno → manuscrita más delgada (alternativa) */
+@font-face { font-family: 'Italianno'; font-weight: 400; font-style: normal; font-display: swap;
+  src: url(../fuentes/italianno-400.woff2) format('woff2'); }
+
+/* Cormorant Garamond → serif clásica (textos) */
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-style: normal; font-display: swap;
+  src: url(../fuentes/cormorant-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-style: italic; font-display: swap;
+  src: url(../fuentes/cormorant-400-italic.woff2) format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 500; font-style: normal; font-display: swap;
+  src: url(../fuentes/cormorant-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 600; font-style: normal; font-display: swap;
+  src: url(../fuentes/cormorant-600-normal.woff2) format('woff2'); }
+
+/* Manrope → sans moderna (etiquetas pequeñas, botones, formulario) */
+@font-face { font-family: 'Manrope'; font-weight: 400; font-style: normal; font-display: swap;
+  src: url(../fuentes/manrope-400.woff2) format('woff2'); }
+@font-face { font-family: 'Manrope'; font-weight: 500; font-style: normal; font-display: swap;
+  src: url(../fuentes/manrope-500.woff2) format('woff2'); }
+@font-face { font-family: 'Manrope'; font-weight: 600; font-style: normal; font-display: swap;
+  src: url(../fuentes/manrope-600.woff2) format('woff2'); }
+
+
+:root {
+  /* ---------- QUÉ FUENTE USA CADA TEXTO ---------- */
+  --fuente-titulos:   'Pinyon Script', 'Italianno', cursive;          /* nombres y títulos */
+  --fuente-texto:     'Cormorant Garamond', Georgia, serif;           /* párrafos, nombres de padres, etc. */
+  --fuente-detalles:  'Manrope', 'Segoe UI', Arial, sans-serif;       /* etiquetas, botones, formulario */
+
+  /* ---------- TAMAÑOS ----------
+     clamp(MÍNIMO, IDEAL, MÁXIMO): en celular usa el mínimo, en computadora
+     crece hasta el máximo. Normalmente basta con cambiar los números. */
+  --tamano-nombres-portada:  clamp(3.4rem, 15vw, 7rem);
+  --tamano-titulo-modulo:    clamp(2.7rem, 11vw, 4.2rem);
+  --tamano-nombre-novios:    clamp(2.3rem, 9vw, 3rem);
+  --tamano-subtitulo:        clamp(1.35rem, 5vw, 1.7rem);
+  --tamano-texto:            clamp(1.12rem, 4.2vw, 1.3rem);
+  --tamano-texto-pequeno:    .78rem;
+  --tamano-numero-contador:  clamp(2rem, 9vw, 3rem);
+  --tamano-fecha-grande:     clamp(4rem, 20vw, 6.5rem);
+
+  /* ---------- ESTILO DE ETIQUETAS (textos pequeños en mayúsculas) ---------- */
+  --espaciado-etiquetas:     .28em;   /* separación entre letras */
+  --interlineado:            1.55;
+}
