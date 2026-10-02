@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f0e8" />
+    <meta name="description" content="Acompáñanos a celebrar nuestra boda." />
+    <title>Valeria &amp; Santiago · Nuestra boda</title>
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script defer src="vendor/gsap.min.js"></script>
+    <script defer src="vendor/ScrollTrigger.min.js"></script>
+    <script defer src="js/config.js"></script>
+    <script defer src="js/app.js"></script>
+  </head>
+  <body>
+    <!-- EDITA AQUÍ: textos, fotos, iconos y adornos de cada sección.
+     Todas las imágenes van en photos/. Un img sin src no se muestra.
+     Para apagar un módulo: agrega hidden a su section.
+     Para reordenar: mueve el bloque section completo. -->
+    <main id="contenido">
+      <!-- COVER · Para apagar: agrega hidden a esta section. -->
+      <section id="cover" class="section cover">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="cover-photos">
+          <div class="slide active" aria-hidden="false">
+            <img
+              src="photos/portada-01.jpg"
+              alt="Una pareja entre árboles y flores"
+              style="object-position: 52% 42%"
+              fetchpriority="high"
+            />
+          </div>
+          <div class="slide" aria-hidden="true">
+            <img
+              src="photos/portada-02.jpg"
+              alt="Un abrazo bajo la luz de la tarde"
+              style="object-position: 52% 45%"
+              loading="lazy"
+            />
+          </div>
+          <div class="slide" aria-hidden="true">
+            <img
+              src="photos/portada-03.jpg"
+              alt="La alegría de comenzar una vida juntos"
+              style="object-position: 56% 42%"
+              loading="lazy"
+            />
+          </div>
+          <div class="cover-shade"></div>
+          <!-- Único texto sobre la portada: nombres al pie, sin animación. -->
+          <h1 class="cover-names">Valeria <span>&amp;</span> Santiago</h1>
+        </div>
+        <!-- Controles fuera de la fotografía. -->
+        <div class="slide-controls" aria-label="Fotografías de portada">
+          <button
+            type="button"
+            data-slide="0"
+            aria-label="Mostrar foto 1"
+            aria-pressed="true"
+          >
+            1
+          </button>
+          <button
+            type="button"
+            data-slide="1"
+            aria-label="Mostrar foto 2"
+            aria-pressed="false"
+          >
+            2
+          </button>
+          <button
+            type="button"
+            data-slide="2"
+            aria-label="Mostrar foto 3"
+            aria-pressed="false"
+          >
+            3
+          </button>
+          <button type="button" id="slideshow-toggle">Pausar fotos</button>
+        </div>
+      </section>
+
+      <!-- COUPLE · Para apagar: agrega hidden a esta section. -->
+      <section id="couple" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Nuestra historia</p>
+            <h2>Dos caminos.<br /><em>Un mismo destino.</em></h2>
+            <p class="intro">
+              Hay personas que se convierten en hogar. Y hay días que queremos
+              guardar para siempre. Este es el nuestro, y queremos compartirlo
+              contigo.
+            </p>
+          </div>
+          <div class="couple-grid">
+            <article class="couple-person reveal">
+              <!-- Foto individual: agrega src="photos/valeria.jpg" -->
+              <div class="photo portrait">
+                <img
+                  class=""
+                  alt="Valeria Ramírez Torres"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <p class="eyebrow">Valeria</p>
+              <h3>Valeria Ramírez Torres</h3>
+              <p class="personal-message">
+                “En ti encontré mi lugar favorito. Hoy elijo caminar contigo, en
+                todas las estaciones de la vida.”
+              </p>
+            </article>
+            <article class="couple-person reveal">
+              <!-- Foto individual: agrega src="photos/santiago.jpg" -->
+              <div class="photo portrait">
+                <img
+                  class=""
+                  alt="Santiago Hernández Morales"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <p class="eyebrow">Santiago</p>
+              <h3>Santiago Hernández Morales</h3>
+              <p class="personal-message">
+                “Lo más bonito de nuestra historia es todo lo que todavía nos
+                queda por escribir. Siempre, contigo.”
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- PARALLAXONE · Para apagar: agrega hidden a esta section. -->
+      <section id="parallaxOne" class="section parallax torn">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="photo parallax-photo">
+          <img
+            class=""
+            src="photos/portada-02.jpg"
+            alt="Un momento juntos al atardecer"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="photo-shade"></div>
+        <blockquote class="quote-content">
+          De todas las cosas bonitas de la vida, tú.
+        </blockquote>
+      </section>
+
+      <!-- PARENTS · Para apagar: agrega hidden a esta section. -->
+      <section id="parents" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Nuestras raíces</p>
+            <h2>El amor que nos <em>acompaña.</em></h2>
+            <p class="intro">
+              Con la bendición y el cariño de nuestros padres.
+            </p>
+          </div>
+          <div class="family-grid">
+            <div>
+              <h3 class="eyebrow family-label">Padres de la novia</h3>
+              <div class="people-grid">
+                <article class="person reveal">
+                  <!-- Foto individual: agrega src="photos/retrato.jpg" a este img. -->
+                  <div class="photo portrait">
+                    <img
+                      class=""
+                      alt="Carlos Ramírez"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <h3>Carlos Ramírez</h3>
+                </article>
+                <article class="person reveal">
+                  <!-- Foto individual: agrega src="photos/retrato.jpg" a este img. -->
+                  <div class="photo portrait">
+                    <img
+                      class=""
+                      alt="María Elena Torres"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <h3>María Elena Torres</h3>
+                </article>
+              </div>
+            </div>
+            <div>
+              <h3 class="eyebrow family-label">Padres del novio</h3>
+              <div class="people-grid">
+                <article class="person reveal">
+                  <!-- Foto individual: agrega src="photos/retrato.jpg" a este img. -->
+                  <div class="photo portrait">
+                    <img
+                      class=""
+                      alt="Javier Hernández"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <h3>Javier Hernández</h3>
+                </article>
+                <article class="person reveal">
+                  <!-- Foto individual: agrega src="photos/retrato.jpg" a este img. -->
+                  <div class="photo portrait">
+                    <img
+                      class=""
+                      alt="Lucía Morales"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <h3>Lucía Morales</h3>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GODPARENTS · Para apagar: agrega hidden a esta section. -->
+      <section id="godparents" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Testigos de nuestro amor</p>
+            <h2>Nuestros padrinos</h2>
+          </div>
+          <div class="people-grid godparents">
+            <article class="person reveal">
+              <!-- Foto individual: agrega src="photos/retrato.jpg" a este img. -->
+              <div class="photo portrait">
+                <img
+                  class=""
+                  alt="Alejandro Ríos"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <h3>Alejandro Ríos</h3>
+              <p class="caption">Padrino de velación</p>
+            </article>
+            <article class="person reveal">
+              <!-- Foto individual: agrega src="photos/retrato.jpg" a este img. -->
+              <div class="photo portrait">
+                <img
+                  class=""
+                  alt="Fernanda Castillo"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <h3>Fernanda Castillo</h3>
+              <p class="caption">Madrina de velación</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATE · Para apagar: agrega hidden a esta section. -->
+      <section id="date" class="section date-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Reserva este día</p>
+            <h2>Una fecha para <em>siempre.</em></h2>
+          </div>
+          <div class="date-lockup">
+            <span data-date="weekday"></span><strong data-date="day"></strong
+            ><span
+              ><span data-date="month"></span><br /><span
+                data-date="year"
+              ></span
+            ></span>
+          </div>
+          <p class="eyebrow">Cada vez falta menos</p>
+          <div class="countdown" role="timer" aria-label="Tiempo para la boda">
+            <div><strong data-count="0">00</strong><span>Días</span></div>
+            <div><strong data-count="1">00</strong><span>Horas</span></div>
+            <div><strong data-count="2">00</strong><span>Minutos</span></div>
+            <div><strong data-count="3">00</strong><span>Segundos</span></div>
+          </div>
+          <button id="calendar-download" type="button" class="button">
+            <!-- Icono calendario: agrega src="photos/icono-calendario.png" -->
+            <img class="icon" alt="" loading="lazy" decoding="async" />Guardar
+            en mi calendario
+          </button>
+        </div>
+      </section>
+
+      <!-- CEREMONY · Para apagar: agrega hidden a esta section. -->
+      <section id="ceremony" class="section venue-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="venue wrap reveal">
+          <div class="venue-image">
+            <!-- Foto del lugar: agrega src="photos/ceremony.jpg". -->
+            <div class="photo">
+              <img
+                class=""
+                alt="Templo de Santo Domingo"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <div class="venue-copy">
+            <p class="eyebrow">La ceremonia</p>
+            <h2>Templo de Santo Domingo</h2>
+            <p class="venue-subtitle">de Guzmán</p>
+            <p class="venue-time">17:00 h</p>
+            <address>
+              C. Macedonio Alcalá s/n, Centro Histórico, Oaxaca de Juárez,
+              Oaxaca.
+            </address>
+            <a
+              class="button"
+              href="https://www.google.com/maps/search/?api=1&amp;query=Templo+de+Santo+Domingo+de+Guzmán+Oaxaca"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><!-- Icono ubicacion: agrega src="photos/icono-ubicacion.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" />Abrir
+              ubicación</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- RECEPTION · Para apagar: agrega hidden a esta section. -->
+      <section id="reception" class="section venue-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="venue wrap reveal reverse">
+          <div class="venue-image">
+            <!-- Foto del lugar: agrega src="photos/reception.jpg". -->
+            <div class="photo">
+              <img
+                class=""
+                alt="Hacienda Los Laureles"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+          <div class="venue-copy">
+            <p class="eyebrow">La recepción</p>
+            <h2>Hacienda Los Laureles</h2>
+            <p class="venue-subtitle">Una noche para recordar</p>
+            <p class="venue-time">19:00 h</p>
+            <address>
+              Carr. a San Felipe del Agua, km 7.5, Oaxaca de Juárez, Oaxaca.
+            </address>
+            <a
+              class="button"
+              href="https://www.google.com/maps/search/?api=1&amp;query=Hacienda+Los+Laureles+Oaxaca"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><!-- Icono ubicacion: agrega src="photos/icono-ubicacion.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" />Abrir
+              ubicación</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ITINERARY · Para apagar: agrega hidden a esta section. -->
+      <section id="itinerary" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Así viviremos nuestro día</p>
+            <h2>Momentos que serán <em>recuerdos.</em></h2>
+          </div>
+          <ol class="timeline">
+            <li class="timeline-item">
+              <!-- Icono church: agrega src="photos/icono-church.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" /><time
+                >17:00</time
+              >
+              <h3>El «sí, acepto»</h3>
+              <p>Ceremonia religiosa</p>
+            </li>
+            <li class="timeline-item">
+              <!-- Icono glasses: agrega src="photos/icono-glasses.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" /><time
+                >18:30</time
+              >
+              <h3>Un brindis por nosotros</h3>
+              <p>Cóctel de bienvenida</p>
+            </li>
+            <li class="timeline-item">
+              <!-- Icono plate: agrega src="photos/icono-plate.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" /><time
+                >19:00</time
+              >
+              <h3>A la mesa</h3>
+              <p>Recepción y cena</p>
+            </li>
+            <li class="timeline-item">
+              <!-- Icono heart: agrega src="photos/icono-heart.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" /><time
+                >21:00</time
+              >
+              <h3>Nuestro primer baile</h3>
+              <p>Un momento inolvidable</p>
+            </li>
+            <li class="timeline-item">
+              <!-- Icono music: agrega src="photos/icono-music.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" /><time
+                >21:30</time
+              >
+              <h3>¡A celebrar!</h3>
+              <p>Que no pare la música</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- PARALLAXTWO · Para apagar: agrega hidden a esta section. -->
+      <section id="parallaxTwo" class="section parallax torn">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="photo parallax-photo">
+          <img
+            class=""
+            src="photos/portada-03.jpg"
+            alt="Una pareja abrazada bajo un árbol"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="photo-shade"></div>
+        <blockquote class="quote-content">
+          Que la vida nos encuentre siempre de la mano.
+        </blockquote>
+      </section>
+
+      <!-- ALBUM · Para apagar: agrega hidden a esta section. -->
+      <section id="album" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap album-inner reveal">
+          <!-- Icono camara: agrega src="photos/icono-camara.png" -->
+          <img class="icon" alt="" loading="lazy" decoding="async" />
+          <p class="eyebrow">Nuestro álbum digital</p>
+          <h2>Tu mirada también<br />es parte de <em>la historia.</em></h2>
+          <p class="intro">
+            Queremos recordar este día también a través de tus ojos. Comparte
+            aquí tus fotos y videos favoritos.
+          </p>
+          <!-- Agrega el enlace real del álbum en href. -->
+          <a class="button" data-pending href="">Compartir fotos</a>
+          <p class="hashtag">#ValeriaYSantiago</p>
+        </div>
+      </section>
+
+      <!-- GALLERY · Para apagar: agrega hidden a esta section. -->
+      <section id="gallery" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Pedacitos de nosotros</p>
+            <h2>Una historia en <em>imágenes.</em></h2>
+          </div>
+          <div class="gallery-grid">
+            <button
+              type="button"
+              class="gallery-item reveal"
+              data-gallery
+              aria-label="Ampliar: Juntos, en nuestro lugar favorito"
+            >
+              <div class="photo">
+                <img
+                  class=""
+                  src="photos/portada-01.jpg"
+                  alt="Juntos, en nuestro lugar favorito"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </button>
+            <button
+              type="button"
+              class="gallery-item reveal"
+              data-gallery
+              aria-label="Ampliar: La luz de una tarde juntos"
+            >
+              <div class="photo">
+                <img
+                  class=""
+                  src="photos/portada-02.jpg"
+                  alt="La luz de una tarde juntos"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </button>
+            <button
+              type="button"
+              class="gallery-item reveal"
+              data-gallery
+              aria-label="Ampliar: Sonrisas que lo dicen todo"
+            >
+              <div class="photo">
+                <img
+                  class=""
+                  src="photos/portada-03.jpg"
+                  alt="Sonrisas que lo dicen todo"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DRESSCODE · Para apagar: agrega hidden a esta section. -->
+      <section id="dresscode" class="section dress-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap dress-inner reveal">
+          <div>
+            <!-- Icono vestimenta: agrega src="photos/icono-vestimenta.png" -->
+            <img class="icon" alt="" loading="lazy" decoding="async" />
+            <p class="eyebrow">Código de vestimenta</p>
+            <h2>Formal</h2>
+          </div>
+          <div>
+            <p class="intro">
+              Vestidos largos o midi y traje. Celebremos con elegancia y con
+              zapatos listos para bailar.
+            </p>
+            <p class="caption">Inspiración de color</p>
+            <div class="swatches">
+              <span
+                style="--swatch: #ac7259"
+                role="img"
+                aria-label="Terracota"
+              ></span
+              ><span
+                style="--swatch: #77765b"
+                role="img"
+                aria-label="Oliva"
+              ></span
+              ><span
+                style="--swatch: #675047"
+                role="img"
+                aria-label="Cacao"
+              ></span
+              ><span
+                style="--swatch: #be9690"
+                role="img"
+                aria-label="Rosa antiguo"
+              ></span>
+            </div>
+            <p class="caption">
+              Reservamos el blanco y el marfil para la novia.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GIFTS · Para apagar: agrega hidden a esta section. -->
+      <section id="gifts" class="section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Detalles con amor</p>
+            <h2>El mejor regalo es <em>tenerte aquí.</em></h2>
+            <p class="intro">
+              Tu presencia es nuestro mejor regalo. Si deseas tener un detalle
+              con nosotros, aquí encontrarás algunas opciones.
+            </p>
+          </div>
+          <div class="gift-grid">
+            <article class="gift-card reveal">
+              <!-- Icono regalo: agrega src="photos/icono-regalo.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" />
+              <h3>Mesa de regalos</h3>
+              <p class="liverpool">Liverpool</p>
+              <!-- Agrega tu enlace de Liverpool en href. -->
+              <a class="text-button" data-pending href=""
+                >Ver mesa de regalos</a
+              >
+            </article>
+            <article class="gift-card reveal">
+              <!-- Icono banco: agrega src="photos/icono-banco.png" -->
+              <img class="icon" alt="" loading="lazy" decoding="async" />
+              <h3>Un nuevo comienzo</h3>
+              <p>Si prefieres un detalle para<br />nuestro próximo capítulo.</p>
+              <button class="text-button" type="button" data-open="bank-dialog">
+                Ver datos bancarios
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- GUESTS · Para apagar: agrega hidden a esta section. -->
+      <section id="guests" class="section guests-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="invitation-card wrap reveal">
+          <p class="eyebrow">Esta invitación es para</p>
+          <h2 id="guest-name">Familia Rodríguez García</h2>
+          <p>Hemos reservado un lugar muy especial para ustedes.</p>
+          <p class="seats"><span data-seats></span> lugares reservados</p>
+        </div>
+      </section>
+
+      <!-- RSVP · Para apagar: agrega hidden a esta section. -->
+      <section id="rsvp" class="section rsvp-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Nos haría muy felices verte</p>
+            <h2>¿Nos acompañas?</h2>
+            <p class="intro">
+              Confirma tu asistencia antes del <span data-deadline></span>.
+            </p>
+          </div>
+          <a class="button button-filled" href="#form">Confirmar asistencia</a>
+        </div>
+      </section>
+
+      <!-- FORM · Para apagar: agrega hidden a esta section. -->
+      <section id="form" class="section form-section">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="wrap form-wrap">
+          <form id="rsvp-form">
+            <h2>Un lugar en <em>nuestra historia.</em></h2>
+            <label
+              >Nombre completo<input
+                name="name"
+                autocomplete="name"
+                required
+                maxlength="120"
+                placeholder="Escribe tu nombre"
+            /></label>
+            <fieldset>
+              <legend>¿Podrás acompañarnos?</legend>
+              <label class="radio-label"
+                ><input type="radio" name="attendance" value="yes" required />
+                Sí, ahí estaré</label
+              ><label class="radio-label"
+                ><input type="radio" name="attendance" value="no" /> No podré
+                asistir</label
+              >
+            </fieldset>
+            <label id="party-size-label"
+              >Número de asistentes<select name="guests"></select
+            ></label>
+            <label
+              >Un mensaje para los novios
+              <span class="optional">(opcional)</span
+              ><textarea
+                name="message"
+                rows="3"
+                maxlength="1000"
+                placeholder="Nos encantará leerte…"
+              ></textarea>
+            </label>
+            <label class="consent"
+              ><input type="checkbox" name="consent" required /><span
+                >Usaremos estos datos únicamente para organizar nuestra
+                boda.</span
+              ></label
+            >
+            <button type="submit" class="button button-filled" id="rsvp-submit">
+              Probar confirmación
+            </button>
+            <p id="demo-note" class="demo-note">
+              Vista de muestra: este formulario todavía no envía respuestas a
+              los novios.
+            </p>
+            <p id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- CLOSING · Para apagar: agrega hidden a esta section. -->
+      <section id="closing" class="section closing">
+        <!-- Adornos opcionales: agrega src="photos/adorno.png". Tamaño en CSS. -->
+        <img
+          class="side-image side-left"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          class="side-image side-right"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="photo">
+          <img
+            class=""
+            src="photos/portada-01.jpg"
+            alt="El comienzo de una vida juntos"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="photo-shade"></div>
+        <div class="closing-copy reveal">
+          <h2>Contigo, siempre.</h2>
+          <p>Gracias por ser parte de nuestra historia.</p>
+          <p data-date="full"></p>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>El comienzo de nuestro siempre.</p>
+      <small data-date="full"></small>
+    </footer>
+    <dialog id="lightbox" class="lightbox" aria-label="Fotografía ampliada">
+      <button class="close text-button" type="button" data-close>Cerrar</button>
+      <img id="lightbox-photo" alt="" />
+      <div class="lightbox-controls">
+        <button id="photo-prev" type="button">Anterior</button>
+        <p id="photo-counter"></p>
+        <button id="photo-next" type="button">Siguiente</button>
+      </div>
+    </dialog>
+    <dialog id="bank-dialog" aria-labelledby="bank-title">
+      <button class="close text-button" type="button" data-close>Cerrar</button>
+      <h2 id="bank-title">Un detalle con amor</h2>
+      <!-- Completa los datos reales directamente en este diálogo. -->
+      <dl>
+        <dt>Titular</dt>
+        <dd>Por confirmar</dd>
+        <dt>Banco</dt>
+        <dd>Por confirmar</dd>
+        <dt>CLABE</dt>
+        <dd>Por confirmar</dd>
+      </dl>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
