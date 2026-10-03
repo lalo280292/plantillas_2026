@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Invitados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="admin.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+<div class="max-w-7xl mx-auto p-4 md:p-6 space-y-4">
+
+    <header class="bg-white rounded-xl shadow-sm p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold flex items-center gap-2"><i class="ph ph-users-three text-indigo-600"></i> Lista de Invitados</h1>
+            <p class="text-sm text-gray-500">Base de datos de invitaciones (sustituye la hoja "Lista")</p>
+        </div>
+        <nav class="flex flex-wrap gap-2 text-sm">
+            <a href="admin_confirmacion.html" class="px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold flex items-center gap-1"><i class="ph ph-check-circle"></i> Confirmaciones</a>
+            <a href="panel.html" class="px-3 py-2 rounded-lg bg-gray-50 border font-bold flex items-center gap-1"><i class="ph ph-squares-four"></i> Panel</a>
+            <button onclick="logout()" class="px-3 py-2 rounded-lg bg-gray-50 border font-bold flex items-center gap-1"><i class="ph ph-sign-out"></i> Salir</button>
+        </nav>
+    </header>
+
+    <section class="grid grid-cols-2 md:grid-cols-5 gap-3" id="stats"></section>
+
+    <section class="bg-white rounded-xl shadow-sm p-4 flex flex-col md:flex-row gap-3 md:items-center justify-between">
+        <input id="buscar" oninput="render()" placeholder="Buscar familia, nombres, mesa o ID..." class="border rounded-lg px-3 py-2 w-full md:w-96">
+        <div class="flex flex-wrap gap-2">
+            <button onclick="abrirModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg flex items-center gap-1"><i class="ph ph-plus"></i> Agregar invitado</button>
+            <button onclick="exportar()" class="bg-gray-50 border font-bold px-4 py-2 rounded-lg flex items-center gap-1"><i class="ph ph-download-simple"></i> CSV</button>
+            <button onclick="importarGoogle()" class="bg-gray-50 border font-bold px-4 py-2 rounded-lg flex items-center gap-1" title="Copia los datos actuales de Google Sheets"><i class="ph ph-cloud-arrow-down"></i> Importar de Google</button>
+        </div>
+    </section>
+
+    <section class="bg-white rounded-xl shadow-sm overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                <tr>
+                    <th class="px-3 py-3 text-left">ID</th>
+                    <th class="px-3 py-3 text-left">Familia</th>
+                    <th class="px-3 py-3 text-left">Nombres</th>
+                    <th class="px-3 py-3">Total</th>
+                    <th class="px-3 py-3">Adul.</th>
+                    <th class="px-3 py-3">Adol.</th>
+                    <th class="px-3 py-3">Niñ.</th>
+                    <th class="px-3 py-3">Mesa</th>
+                    <th class="px-3 py-3">Enviado</th>
+                    <th class="px-3 py-3">Estado</th>
+                    <th class="px-3 py-3">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla" class="divide-y"></tbody>
+        </table>
+    </section>
+</div>
+
+<!-- Modal invitado -->
+<div id="modal" class="fixed inset-0 bg-gray-900/60 hidden items-center justify-center z-40 p-4">
+    <form id="formInvitado" class="bg-white rounded-xl shadow-xl p-6 w-full max-w-lg space-y-3">
+        <h2 id="modalTitulo" class="text-lg font-bold"></h2>
+        <input type="hidden" name="ID">
+        <label class="block text-sm font-bold">Familia / Invitación
+            <input name="Familia" required class="mt-1 w-full border rounded-lg px-3 py-2 font-normal">
+        </label>
+        <label class="block text-sm font-bold">Nombres
+            <textarea name="Nombres" rows="2" class="mt-1 w-full border rounded-lg px-3 py-2 font-normal"></textarea>
+        </label>
+        <div class="grid grid-cols-3 gap-3">
+            <label class="block text-sm font-bold">Adultos <input name="Adultos" type="number" min="0" value="0" class="mt-1 w-full border rounded-lg px-3 py-2 font-normal"></label>
+            <label class="block text-sm font-bold">Adolescentes <input name="Adolescentes" type="number" min="0" value="0" class="mt-1 w-full border rounded-lg px-3 py-2 font-normal"></label>
+            <label class="block text-sm font-bold">Niños <input name="Ninos" type="number" min="0" value="0" class="mt-1 w-full border rounded-lg px-3 py-2 font-normal"></label>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <label class="block text-sm font-bold">Total invitados
+                <input name="Invitados" type="number" min="0" value="0" class="mt-1 w-full border rounded-lg px-3 py-2 font-normal">
+                <span class="text-xs font-normal text-gray-400">Se calcula solo si lo dejas en 0</span>
+            </label>
+            <label class="block text-sm font-bold">Mesa <input name="Mesa" class="mt-1 w-full border rounded-lg px-3 py-2 font-normal" placeholder="Ej. 5"></label>
+        </div>
+        <label class="flex items-center gap-2 text-sm font-bold"><input type="checkbox" name="Enviado" class="w-4 h-4"> Invitación enviada</label>
+        <div class="flex justify-end gap-2 pt-2">
+            <button type="button" onclick="cerrarModal()" class="px-4 py-2 rounded-lg border font-bold">Cancelar</button>
+            <button class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold">Guardar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+let lista = [];
+let confirmaciones = {};
+
+async function onLogin() {
+    try {
+        const [l, c] = await Promise.all([api('lista'), api('confirmacion')]);
+        lista = l;
+        confirmaciones = Object.fromEntries(c.map(x => [String(x.id), x]));
+        render();
+    } catch (e) { alert(e.message); }
+}
+
+function estado(id) {
+    const c = confirmaciones[id];
+    if (!c) return '<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">Pendiente</span>';
+    return String(c.asistira).toLowerCase().startsWith('s')
+        ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">Sí (${esc(c.cantidad)})</span>`
+        : '<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">No</span>';
+}
+
+function render() {
+    const q = document.getElementById('buscar').value.toLowerCase();
+    const filas = lista.filter(r => [r.ID, r.Familia, r.Nombres, r.Mesa].join(' ').toLowerCase().includes(q));
+
+    const suma = k => lista.reduce((t, r) => t + (parseInt(r[k]) || 0), 0);
+    const enviados = lista.filter(r => r.Enviado === 'TRUE').length;
+    const conf = Object.values(confirmaciones).filter(c => String(c.asistira).toLowerCase().startsWith('s'));
+    const stat = (t, v, color) => `<div class="bg-white rounded-xl shadow-sm p-4"><p class="text-xs uppercase font-bold text-gray-400">${t}</p><p class="text-2xl font-bold ${color}">${v}</p></div>`;
+    document.getElementById('stats').innerHTML =
+        stat('Invitaciones', lista.length, 'text-indigo-600') +
+        stat('Personas', suma('Invitados'), 'text-indigo-600') +
+        stat('Enviadas', `${enviados}/${lista.length}`, 'text-blue-600') +
+        stat('Confirmados', conf.reduce((t, c) => t + (parseInt(c.cantidad) || 0), 0), 'text-green-600') +
+        stat('Sin respuesta', lista.filter(r => !confirmaciones[r.ID]).length, 'text-yellow-600');
+
+    const tbody = document.getElementById('tabla');
+    if (!filas.length) {
+        tbody.innerHTML = '<tr><td colspan="11" class="text-center py-6 text-gray-400">Sin invitados.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = filas.map(r => `
+        <tr class="hover:bg-gray-50">
+            <td class="px-3 py-2 font-mono text-xs text-gray-500">${esc(r.ID)}</td>
+            <td class="px-3 py-2 font-medium">${esc(r.Familia)}</td>
+            <td class="px-3 py-2 text-xs text-gray-500 max-w-xs truncate" title="${esc(r.Nombres)}">${esc(r.Nombres)}</td>
+            <td class="px-3 py-2 text-center font-bold">${esc(r.Invitados)}</td>
+            <td class="px-3 py-2 text-center">${esc(r.Adultos)}</td>
+            <td class="px-3 py-2 text-center">${esc(r.Adolescentes)}</td>
+            <td class="px-3 py-2 text-center">${esc(r.Ninos)}</td>
+            <td class="px-3 py-2 text-center">${esc(r.Mesa) || '<span class="text-gray-300">-</span>'}</td>
+            <td class="px-3 py-2 text-center"><input type="checkbox" class="w-4 h-4 accent-green-600" ${r.Enviado === 'TRUE' ? 'checked' : ''} onchange="toggleEnviado('${esc(r.ID)}', this.checked)"></td>
+            <td class="px-3 py-2 text-center">${estado(r.ID)}</td>
+            <td class="px-3 py-2">
+                <div class="flex justify-center gap-1 text-lg">
+                    <button title="Copiar link" onclick="copiar(this, '${esc(r.Link)}')" class="p-1 text-blue-600 hover:bg-blue-50 rounded"><i class="ph ph-link"></i></button>
+                    <button title="Editar" onclick="abrirModal('${esc(r.ID)}')" class="p-1 text-indigo-600 hover:bg-indigo-50 rounded"><i class="ph ph-pencil-simple"></i></button>
+                    <button title="Eliminar" onclick="eliminar('${esc(r.ID)}')" class="p-1 text-red-600 hover:bg-red-50 rounded"><i class="ph ph-trash"></i></button>
+                </div>
+            </td>
+        </tr>`).join('');
+}
+
+const modal = document.getElementById('modal');
+const form = document.getElementById('formInvitado');
+
+function abrirModal(id) {
+    form.reset();
+    const r = lista.find(x => x.ID === id);
+    document.getElementById('modalTitulo').textContent = r ? `Editar invitado (${r.ID})` : 'Nuevo invitado';
+    form.ID.value = r ? r.ID : '';
+    if (r) {
+        ['Familia', 'Nombres', 'Adultos', 'Adolescentes', 'Ninos', 'Invitados', 'Mesa'].forEach(k => form[k].value = r[k] ?? '');
+        form.Enviado.checked = r.Enviado === 'TRUE';
+    }
+    modal.classList.replace('hidden', 'flex');
+    form.Familia.focus();
+}
+function cerrarModal() { modal.classList.replace('flex', 'hidden'); }
+
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const datos = Object.fromEntries(new FormData(form));
+    datos.Enviado = form.Enviado.checked ? 'TRUE' : 'FALSE';
+    try {
+        await api('guardarInvitado', datos);
+        cerrarModal();
+        onLogin();
+    } catch (err) { alert(err.message); }
+});
+
+async function toggleEnviado(id, checked) {
+    try {
+        await api('guardarInvitado', { ...lista.find(r => r.ID === id), Enviado: checked ? 'TRUE' : 'FALSE' });
+        lista.find(r => r.ID === id).Enviado = checked ? 'TRUE' : 'FALSE';
+        render();
+    } catch (err) { alert(err.message); render(); }
+}
+
+async function eliminar(id) {
+    const r = lista.find(x => x.ID === id);
+    if (!confirm(`¿Eliminar a "${r.Familia}"? También se borrará su confirmación.`)) return;
+    try { await api('eliminarInvitado', { id }); onLogin(); } catch (err) { alert(err.message); }
+}
+
+function copiar(btn, url) {
+    navigator.clipboard.writeText(url).then(() => {
+        btn.innerHTML = '<i class="ph ph-check"></i>';
+        setTimeout(() => btn.innerHTML = '<i class="ph ph-link"></i>', 1200);
+    });
+}
+
+function exportar() {
+    descargarCSV('lista_invitados.csv', ['ID', 'Familia', 'Nombres', 'Invitados', 'Adultos', 'Adolescentes', 'Ninos', 'Mesa', 'Enviado', 'Link'], lista);
+}
+
+async function importarGoogle() {
+    const url = prompt('Pega la URL de tu Google Apps Script (la que estaba en proxy_google_backup.php).\n\n⚠ Esto REEMPLAZA la lista y las confirmaciones actuales.');
+    if (!url) return;
+    try {
+        const r = await api('importarGoogle', { url: url.trim() });
+        alert(`Importados: ${r.lista} invitados y ${r.confirmacion} confirmaciones.`);
+        onLogin();
+    } catch (err) { alert(err.message); }
+}
+</script>
+</body>
+</html>

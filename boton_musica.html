@@ -1,0 +1,24 @@
+<button id="play-pause-button" style="background-color: #ffffff; border-radius: 50%; width: 45px; height: 45px; box-shadow: 2px 2px 2px #333;">
+
+  <img id="play-pause-icon" src="https://musica.enfoquedigital.com.mx/musica/silencio.gif" alt="Play/Pause" width="40px" height="40px">
+</button>
+
+<audio id="audio-player" src="https://musica.enfoquedigital.com.mx/musica/amarteesunplacer.mp3"></audio>
+
+
+<script>
+let audioPlayer = document.getElementById("audio-player");
+let playPauseButton = document.getElementById("play-pause-button");
+let playPauseIcon = document.getElementById("play-pause-icon");
+
+
+playPauseButton.addEventListener("click", function() {
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    playPauseIcon.src = "https://musica.enfoquedigital.com.mx/musica/silencio.gif" ;
+  } else {
+    audioPlayer.pause();
+    playPauseIcon.src = "https://musica.enfoquedigital.com.mx/musica/clave.gif";
+  }
+});
+</script>

@@ -1,0 +1,92 @@
+<style>
+    #popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Para centrar los elementos en columna */
+    }
+    .envelope {
+        position: relative;
+        width: 100vw; /* Ocupa toda la pantalla */
+        height: 100vh; /* Ocupa toda la pantalla */
+        transition: transform 2s ease; /* Transición más lenta */
+        overflow: hidden;
+    }
+    .left-envelope, .right-envelope {
+        width: 100vw; /* Ocupa toda la pantalla */
+        height: 100vh; /* Ocupa toda la pantalla */
+        transition: transform 2s ease; /* Transición más lenta */
+        position: absolute;
+    }
+    .left-envelope {
+        left: 0; /* Posición izquierda */
+    }
+    .right-envelope {
+        right: 0; /* Posición derecha */
+    }
+    .gif-container {
+        position: absolute;
+        top: 50%; /* Ajusta la posición vertical */
+        z-index: 2; /* Asegura que esté encima de los sobres */
+    }
+    .gif-container img {
+        width: 55px; /* Ancho del GIF */
+        height: 55px; /* Alto del GIF */
+    }
+    .content {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+
+    <div id="popup">
+        <div class="gif-container">
+            <img src="https://enfoquedigital.com.mx/sobres/mano.gif" alt="Cargando" id="gifTrigger">
+        </div>
+        <div class="envelope">
+            <img src="https://enfoquedigital.com.mx/sobres/blancoizq.png" alt="Sobre Izquierdo" class="left-envelope" id="leftEnvelope">
+            <img src="https://enfoquedigital.com.mx/sobres/blancoder.png" alt="Sobre Derecho" class="right-envelope" id="rightEnvelope">
+        </div>
+    </div>
+
+    <!-- Audio Player -->
+    <audio id="audio-player" src="https://musica.enfoquedigital.com.mx/musica/amarteesunplacer.mp3"></audio>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('leftEnvelope').style.transform = 'translateX(-100vw)'; // Mueve hacia la izquierda
+            document.getElementById('rightEnvelope').style.transform = 'translateX(100vw)'; // Mueve hacia la derecha
+
+            // Reproduce la música
+            let audioPlayer = document.getElementById("audio-player");
+            audioPlayer.play();
+
+            setTimeout(() => {
+                document.getElementById('popup').style.display = 'none'; // Oculta el popup
+                document.body.style.position = ''; // Restablece la posición del body
+                document.body.style.overflow = ''; // Restablece el overflow del body
+                document.documentElement.style.overflow = ''; // Restablece el overflow del html
+                document.removeEventListener('touchmove', preventScroll, { passive: false }); // Remueve el listener de prevención de desplazamiento
+                document.getElementById('content').style.display = 'block'; // Muestra el contenido
+            }, 2000); // Espera el tiempo de la transición antes de ocultar el popup
+        }
+
+        document.getElementById('rightEnvelope').addEventListener('click', openEnvelope);
+        document.getElementById('gifTrigger').addEventListener('click', openEnvelope); // Añadir evento al GIF
+
+        function preventScroll(event) {
+            event.preventDefault();
+        }
+
+        // Prevenir el desplazamiento táctil en móviles
+        document.addEventListener('touchmove', preventScroll, { passive: false });
+    </script>
+

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribución de Mesas - Plan y Fiesta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: sans-serif; }
+        @media print {
+            .no-print { display: none; }
+            .break-inside-avoid { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen p-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-sm gap-4 no-print">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Distribución de Mesas</h1>
+                <p class="text-gray-500 text-sm">Organización por número de mesa</p>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="btnRefresh" onclick="fetchData()" class="flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-lg hover:bg-blue-100 transition font-bold text-sm">
+                    <i id="iconRefresh" class="ph ph-arrows-clockwise text-xl"></i> 
+                    <span id="textRefresh">Actualizar</span>
+                </button>
+
+                <button onclick="window.print()" class="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-bold text-sm">
+                    <i class="ph ph-printer text-xl"></i> Imprimir
+                </button>
+            </div>
+        </header>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm sticky top-2 z-20 border border-gray-200 no-print">
+            <div class="relative">
+                <i class="ph ph-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-lg"></i>
+                <input type="text" id="searchInput" 
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none transition" 
+                    placeholder="Buscar familia para ver en qué mesa está..." disabled>
+            </div>
+        </div>
+
+        <div id="tablesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-10 text-gray-500 animate-pulse">
+                Cargando distribución...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let allGuests = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            document.getElementById('searchInput').addEventListener('input', (e) => filterTables(e.target.value));
+        });
+
+        async function fetchData() {
+            // --- 1. ACTIVAR ANIMACIÓN UI ---
+            const btn = document.getElementById('btnRefresh');
+            const icon = document.getElementById('iconRefresh');
+            const text = document.getElementById('textRefresh');
+
+            // Estado de carga visual
+            if(btn && icon && text) {
+                icon.classList.add('animate-spin'); // Hace girar el icono
+                text.innerText = "Cargando...";
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+            }
+
+            try {
+                // Fetch de datos
+                const response = await fetch('proxy.php?method=read&t=' + new Date().getTime());
+                if (!response.ok) throw new Error('Error de conexión');
+                
+                const rawData = await response.json();
+                
+                // Filtramos solo filas que tengan Familia
+                allGuests = rawData.filter(row => row.Familia && String(row.Familia).trim() !== "");
+
+                processAndRenderTables(allGuests);
+                
+                // Habilitar input y restaurar placeholder
+                const searchInput = document.getElementById('searchInput');
+                searchInput.disabled = false;
+                if(allGuests.length > 0) searchInput.placeholder = "Buscar familia para ver en qué mesa está...";
+
+            } catch (error) {
+                document.getElementById('tablesContainer').innerHTML = 
+                    `<div class="col-span-full text-center text-red-500 p-4 bg-white rounded border border-red-200">
+                        Error al cargar: ${error.message}
+                    </div>`;
+            } finally {
+                // --- 2. DETENER ANIMACIÓN UI (Siempre ocurre) ---
+                if(btn && icon && text) {
+                    icon.classList.remove('animate-spin');
+                    text.innerText = "Actualizar";
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        function processAndRenderTables(guests) {
+            const tables = {};
+            const unassigned = [];
+
+            guests.forEach(guest => {
+                let mesaRaw = String(guest.Mesa || "").trim();
+
+                // 1. Si no tiene mesa, va a "Sin Asignar"
+                if (mesaRaw === "") {
+                    unassigned.push(guest);
+                    return;
+                }
+
+                // 2. Lógica para detectar "1 y 5" o "Mesa 4, 5"
+                const numbers = mesaRaw.match(/\d+/g);
+
+                if (numbers) {
+                    [...new Set(numbers)].forEach(num => {
+                        const key = parseInt(num);
+                        if (!tables[key]) tables[key] = [];
+                        tables[key].push(guest);
+                    });
+                } else {
+                    // 3. Texto sin números
+                    const key = mesaRaw; 
+                    if (!tables[key]) tables[key] = [];
+                    tables[key].push(guest);
+                }
+            });
+
+            renderGrid(tables, unassigned);
+        }
+
+        function renderGrid(tablesObj, unassignedList) {
+            const container = document.getElementById('tablesContainer');
+            container.innerHTML = '';
+
+            // Ordenamos las llaves: primero números, luego textos
+            const keys = Object.keys(tablesObj).sort((a, b) => {
+                const numA = parseInt(a);
+                const numB = parseInt(b);
+                if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+                return String(a).localeCompare(String(b));
+            });
+
+            // 1. Renderizar Mesas
+            keys.forEach(key => {
+                const guestsInTable = tablesObj[key];
+                
+                const totalInTable = guestsInTable.reduce((acc, curr) => {
+                     const adu = parseInt(curr.Adultos) || 0;
+                     const ado = parseInt(curr.Adolescentes) || 0;
+                     const nin = parseInt(curr.Ninos) || 0;
+                     return acc + adu + ado + nin;
+                }, 0);
+
+                const card = createTableCard(key, totalInTable, guestsInTable);
+                container.appendChild(card);
+            });
+
+            // 2. Renderizar "Sin Asignar"
+            if (unassignedList.length > 0) {
+                const totalUn = unassignedList.length; 
+                const card = createTableCard("Sin Mesa", totalUn + " fam", unassignedList, true);
+                container.appendChild(card);
+            }
+        }
+
+        function createTableCard(title, count, guests, isUnassigned = false) {
+            const div = document.createElement('div');
+            // break-inside-avoid para impresión limpia
+            div.className = `bg-white rounded-xl shadow-sm border ${isUnassigned ? 'border-red-200 bg-red-50' : 'border-gray-200'} overflow-hidden flex flex-col break-inside-avoid`;
+
+            const headerColor = isUnassigned ? 'bg-red-100 text-red-800' : 'bg-blue-50 text-blue-800';
+            
+            let guestsHtml = '';
+            guests.forEach(g => {
+                const adu = parseInt(g.Adultos) || 0;
+                const ado = parseInt(g.Adolescentes) || 0;
+                const nin = parseInt(g.Ninos) || 0;
+                const totalRow = adu + ado + nin;
+
+                guestsHtml += `
+                    <div class="border-b border-gray-100 last:border-0 py-3 px-4 hover:bg-gray-50 search-item transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-gray-800 text-sm">${g.Familia || 'Sin Nombre'}</p>
+                                <p class="text-xs text-gray-500 truncate max-w-[150px]">${g.Nombres || ''}</p>
+                            </div>
+                            <span class="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-1 rounded-full">
+                                ${totalRow} p.
+                            </span>
+                        </div>
+                        <div class="mt-1 flex gap-2 text-[10px] text-gray-400 uppercase tracking-wide">
+                            ${adu > 0 ? `<span>Adul: ${adu}</span>` : ''}
+                            ${ado > 0 ? `<span>Adol: ${ado}</span>` : ''}
+                            ${nin > 0 ? `<span>Niñ: ${nin}</span>` : ''} 
+                        </div>
+                    </div>
+                `;
+            });
+
+            div.innerHTML = `
+                <div class="${headerColor} px-4 py-3 flex justify-between items-center border-b border-gray-200/50">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        ${!isUnassigned ? '<i class="ph ph-chair"></i>' : '<i class="ph ph-warning-circle"></i>'}
+                        ${isNaN(title) ? title : 'Mesa ' + title}
+                    </h3>
+                    <span class="text-xs font-bold bg-white/50 px-2 py-1 rounded shadow-sm">
+                        ${typeof count === 'number' ? count + ' pax' : count}
+                    </span>
+                </div>
+                <div class="flex-1">
+                    ${guestsHtml}
+                </div>
+            `;
+            return div;
+        }
+
+        // Función de búsqueda
+        function filterTables(query) {
+            const lowerQuery = query.toLowerCase();
+            const cards = document.querySelectorAll('#tablesContainer > div');
+
+            cards.forEach(card => {
+                const rows = card.querySelectorAll('.search-item');
+                let hasMatch = false;
+
+                rows.forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    if (text.includes(lowerQuery)) {
+                        row.style.display = 'block';
+                        hasMatch = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (lowerQuery === "") {
+                    rows.forEach(r => r.style.display = 'block');
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = hasMatch ? 'flex' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

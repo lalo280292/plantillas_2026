@@ -1,0 +1,141 @@
+
+<style>
+  .gallery {
+    display: none; /* Oculta inicialmente la galería */
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 125px;
+    gap: 8px;
+    width: 365px;
+    max-width: 100%;
+  }
+
+  .gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .gallery .wide {
+    grid-column: span 2;
+  }
+
+  .gallery .tall {
+    grid-row: span 2;
+  }
+
+  .fullscreen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .fullscreen img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 5px;
+  }
+
+  .fullscreen .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .fullscreen .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 36px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .fullscreen .arrow.left {
+    left: 20px;
+  }
+
+  .fullscreen .arrow.right {
+    right: 20px;
+  }
+</style>
+
+<div class="gallery">
+  <img src="1.jpg">
+  <img src="2.jpg">
+  <img src="3.jpg">
+  <img src="4x.jpg" class="tall">
+  <img src="5x.jpg" class="tall">
+  <img src="8.jpg" class="tall">
+  <img src="7.jpg">
+  <img src="6.jpg" class="wide">
+</div>
+
+
+<div class="fullscreen" id="fullscreen">
+  <span class="close" id="close">&times;</span>
+  <span class="arrow left" id="prev">&#10094;</span>
+  <img src="" alt="Fullscreen Image" id="fullscreen-img">
+  <span class="arrow right" id="next">&#10095;</span>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Al cargar la página, mostrar la galería
+    document.querySelector('.gallery').style.display = 'grid';
+  });
+
+  const gallery = document.querySelector('.gallery');
+  const fullscreen = document.getElementById('fullscreen');
+  const fullscreenImg = document.getElementById('fullscreen-img');
+  const closeBtn = document.getElementById('close');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let currentIndex = 0;
+
+  const images = Array.from(gallery.querySelectorAll('img'));
+
+  function openFullscreen(index) {
+    currentIndex = index;
+    fullscreenImg.src = images[currentIndex].src;
+    fullscreen.style.display = 'flex';
+  }
+
+  function closeFullscreen() {
+    fullscreen.style.display = 'none';
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % images.length;
+    fullscreenImg.src = images[currentIndex].src;
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    fullscreenImg.src = images[currentIndex].src;
+  }
+
+  images.forEach((img, index) => {
+    img.addEventListener('click', () => openFullscreen(index));
+  });
+
+  closeBtn.addEventListener('click', closeFullscreen);
+  nextBtn.addEventListener('click', showNext);
+  prevBtn.addEventListener('click', showPrev);
+
+  fullscreen.addEventListener('click', (e) => {
+    if (e.target === fullscreen) closeFullscreen();
+  });
+</script>

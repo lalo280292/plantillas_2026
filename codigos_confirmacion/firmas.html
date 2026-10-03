@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Libro de Firmas</title>
+    <!-- Etiqueta meta viewport para dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 50px 10px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            flex: 1 1 calc(33.333% - 30px);
+            max-width: calc(33.333% - 30px);
+            margin: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .card p {
+            font-style: italic;
+            font-size: 1.2em;
+            color: #7f8c8d;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 1024px) {
+            .card {
+                flex: 1 1 calc(50% - 30px);
+                max-width: calc(50% - 30px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                font-size: 2.5em;
+                padding: 30px 0;
+            }
+            .container {
+                padding: 30px 10px;
+            }
+            .card {
+                flex: 1 1 calc(100% - 30px);
+                max-width: calc(100% - 30px);
+            }
+            .card h2 {
+                font-size: 1.4em;
+            }
+            .card p {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                font-size: 2em;
+                padding: 20px 0;
+            }
+            .card {
+                margin: 10px 5px;
+                padding: 15px;
+            }
+            .card h2 {
+                font-size: 1.6em;
+            }
+            .card p {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .card h2 {
+                font-size: 1.8em;
+            }
+            .card p {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Libro de Firmas
+</header>
+
+<div class="container" id="content">
+    <!-- Los recuadros de firmas se cargarán aquí -->
+</div>
+
+<script>
+    fetch('proxy.php?sheet=Firmas')
+        .then(response => response.json())
+        .then(data => {
+            const content = document.getElementById('content');
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const name = document.createElement('h2');
+                name.textContent = item.Nombre;
+
+                const message = document.createElement('p');
+                message.textContent = item.Mensaje;
+
+                card.appendChild(name);
+                card.appendChild(message);
+
+                content.appendChild(card);
+            });
+        })
+        .catch(error => console.error('Error al cargar los datos:', error));
+</script>
+
+</body>
+</html>

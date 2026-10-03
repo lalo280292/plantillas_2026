@@ -1,0 +1,63 @@
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // En vez de usar window.location.href:
+  const currentUrl = new URL(window.location.href);
+  const pageUrl = `${currentUrl.protocol}//${currentUrl.hostname}`;
+  
+  // Llamar a ipinfo.io para obtener datos de IP y ubicación
+  fetch('https://ipinfo.io/json?token=a0d9ba3070c518')
+    .then(response => response.json())
+    .then(data => {
+      let lat = null;
+      let lon = null;
+      if (data.loc) {
+        [lat, lon] = data.loc.split(',');
+      }
+
+      // Preparar el objeto con la URL ya “recortada”
+      const visitData = {
+        pageLink: pageUrl,  // <-- Solo dominio
+        ip: data.ip || null,
+        country: data.country || null,
+        region: data.region || null,
+        city: data.city || null,
+        lat: lat || null,
+        lon: lon || null
+      };
+
+      // Enviar datos al servidor
+      fetch('https://enfoquedigital.com.mx/permanente/track.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(visitData)
+      })
+      .then(response => response.text())
+      .then(result => {
+        console.log('Datos enviados:', result);
+      })
+      .catch(error => {
+        console.error('Error al enviar datos:', error);
+      });
+    })
+    .catch(error => {
+      console.error('Error con ipinfo:', error);
+      // Enviar datos básicos sin ubicación
+      const visitData = {
+        pageLink: pageUrl,
+        ip: null,
+        country: null,
+        region: null,
+        city: null,
+        lat: null,
+        lon: null
+      };
+      fetch('https://enfoquedigital.com.mx/permanente/track.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(visitData)
+      });
+    });
+});
+</script>
+
+
