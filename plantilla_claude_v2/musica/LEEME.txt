@@ -1,0 +1,5 @@
+Pon aquí tu canción con el nombre  cancion.mp3
+y en index.html, dentro de AJUSTES, escribe:
+    musica: { archivo: "musica/cancion.mp3", volumen: 0.5 },
+
+Tip: usa un MP3 de 128 kbps y menos de 4 MB para que cargue rápido.

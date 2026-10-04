@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generador de links por invitado</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="css/invitacion.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px 16px 60px; background: var(--color-fondo); color: var(--color-texto); font-family: var(--fuente-detalles); font-size: 15px; }
+    main { max-width: 900px; margin: 0 auto; }
+    h1 { font-family: var(--fuente-titulos); font-weight: 400; font-size: 2.6rem; color: var(--color-titulos); margin: 0 0 4px; }
+    p.ayuda { color: var(--color-texto-suave); margin: 0 0 22px; line-height: 1.5; }
+    label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--color-texto-suave); margin: 18px 0 6px; }
+    input, textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--color-borde); border-radius: 10px; background: var(--color-tarjeta); font: inherit; color: inherit; }
+    textarea { min-height: 150px; resize: vertical; font-family: ui-monospace, Consolas, monospace; font-size: 14px; }
+    small { color: var(--color-texto-suave); }
+    .botones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    button, .btn { padding: 10px 16px; border: 1px solid var(--color-boton); border-radius: 999px; background: var(--color-boton); color: var(--color-boton-texto); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .sec { background: transparent; color: var(--color-acento); border-color: var(--color-acento-claro); }
+    table { width: 100%; border-collapse: collapse; margin-top: 26px; background: var(--color-tarjeta); border-radius: 12px; overflow: hidden; }
+    th, td { padding: 10px; border-bottom: 1px solid var(--color-borde); text-align: left; vertical-align: middle; font-size: 14px; }
+    th { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--color-texto-suave); }
+    td.link { word-break: break-all; color: var(--color-texto-suave); font-size: 12px; }
+    td .botones { margin: 0; flex-wrap: nowrap; }
+    td button, td .btn { padding: 7px 11px; font-size: .7rem; }
+    .vacio { text-align: center; color: var(--color-texto-suave); padding: 30px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Links por invitado</h1>
+  <p class="ayuda">
+    Crea un link personalizado para cada invitado: su nombre aparece en el sobre y en el pase,
+    y el formulario limita los asistentes a sus pases. Este archivo es solo para ti; no lo
+    compartas con los invitados.
+  </p>
+
+  <label for="url">1 · Link de la invitación publicada</label>
+  <input id="url" placeholder="https://tusitio.com/sofia-y-mateo/" value="">
+  <small>Si lo dejas vacío se usa el link de esta carpeta (sirve para probar en tu computadora).</small>
+
+  <label for="lista">2 · Invitados (uno por línea:  Nombre, pases)</label>
+  <textarea id="lista">Familia Ramírez Ortega, 4
+Ana López y Luis Pérez, 2
+Tía Carmen, 1</textarea>
+
+  <label for="mensaje">3 · Mensaje para WhatsApp  ({invitado} y {link} se reemplazan solos)</label>
+  <textarea id="mensaje" style="min-height: 90px">¡Hola {invitado}! Con mucho cariño te compartimos nuestra invitación de boda 💍
+{link}</textarea>
+
+  <div class="botones">
+    <button id="generar" type="button">Generar links</button>
+    <button id="csv" type="button" class="sec">Descargar lista (Excel / CSV)</button>
+  </div>
+
+  <div style="overflow-x: auto"><table style="min-width: 640px">
+    <thead><tr><th>Invitado</th><th>Pases</th><th>Link</th><th></th></tr></thead>
+    <tbody id="tabla"><tr><td colspan="4" class="vacio">Presiona «Generar links»</td></tr></tbody>
+  </table></div>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let filas = [];
+
+  function base() {
+    const v = $("url").value.trim();
+    if (v) return v;
+    return location.href.replace(/generador-links\.html.*$/, "index.html");
+  }
+
+  function generar() {
+    const b = base();
+    filas = $("lista").value.split("\n").map((linea) => {
+      const partes = linea.split(",");
+      const nombre = partes[0].trim();
+      const pases = parseInt(partes[1], 10) || "";
+      if (!nombre) return null;
+      const url = new URL(b, location.href);
+      url.searchParams.set("invitado", nombre);
+      if (pases) url.searchParams.set("pases", pases);
+      return { nombre, pases, link: url.href };
+    }).filter(Boolean);
+
+    const tabla = $("tabla");
+    tabla.innerHTML = "";
+    if (!filas.length) { tabla.innerHTML = '<tr><td colspan="4" class="vacio">No hay invitados</td></tr>'; return; }
+    filas.forEach((f) => {
+      const tr = document.createElement("tr");
+      const mensaje = $("mensaje").value.replace(/\{invitado\}/g, f.nombre).replace(/\{link\}/g, f.link);
+      tr.innerHTML = `<td></td><td></td><td class="link"></td>
+        <td><div class="botones">
+          <button type="button" class="sec">Copiar</button>
+          <a class="btn" target="_blank" rel="noopener">WhatsApp</a>
+        </div></td>`;
+      tr.children[0].textContent = f.nombre;
+      tr.children[1].textContent = f.pases;
+      tr.children[2].textContent = f.link;
+      const copiar = tr.querySelector("button");
+      copiar.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(f.link); } catch { prompt("Copia el link:", f.link); }
+        copiar.textContent = "¡Copiado!";
+        setTimeout(() => (copiar.textContent = "Copiar"), 1500);
+      });
+      tr.querySelector("a").href = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+      tabla.appendChild(tr);
+    });
+  }
+
+  function descargarCsv() {
+    if (!filas.length) generar();
+    const esc = (s) => `"${String(s).replace(/"/g, '""')}"`;
+    const csv = "﻿Invitado,Pases,Link\n" + filas.map((f) => [f.nombre, f.pases, f.link].map(esc).join(",")).join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    a.download = "links-invitados.csv";
+    a.click();
+  }
+
+  $("generar").addEventListener("click", generar);
+  $("csv").addEventListener("click", descargarCsv);
+</script>
+</body>
+</html>
