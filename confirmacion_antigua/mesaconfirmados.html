@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribución (Confirmados) - Plan y Fiesta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: sans-serif; }
+        @media print {
+            .no-print { display: none; }
+            .break-inside-avoid { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen p-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-sm gap-4 no-print border-t-4 border-emerald-500">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Distribución de Confirmados</h1>
+                <p class="text-emerald-600 text-sm font-medium">Basado en la hoja de Confirmación</p>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="btnRefresh" onclick="fetchData()" class="flex items-center gap-2 bg-emerald-50 text-emerald-600 border border-emerald-200 px-4 py-2 rounded-lg hover:bg-emerald-100 transition font-bold text-sm">
+                    <i id="iconRefresh" class="ph ph-arrows-clockwise text-xl"></i> 
+                    <span id="textRefresh">Actualizar</span>
+                </button>
+
+                <button onclick="window.print()" class="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-bold text-sm">
+                    <i class="ph ph-printer text-xl"></i> Imprimir
+                </button>
+            </div>
+        </header>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm sticky top-2 z-20 border border-gray-200 no-print">
+            <div class="relative">
+                <i class="ph ph-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-lg"></i>
+                <input type="text" id="searchInput" 
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-emerald-500 outline-none transition" 
+                    placeholder="Buscar confirmado..." disabled>
+            </div>
+        </div>
+
+        <div id="tablesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-10 text-gray-500 animate-pulse">
+                Cargando confirmaciones...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let allGuests = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            document.getElementById('searchInput').addEventListener('input', (e) => filterTables(e.target.value));
+        });
+
+        async function fetchData() {
+            // --- UI: Loading ---
+            const btn = document.getElementById('btnRefresh');
+            const icon = document.getElementById('iconRefresh');
+            const text = document.getElementById('textRefresh');
+
+            if(btn && icon && text) {
+                icon.classList.add('animate-spin');
+                text.innerText = "Cargando...";
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+            }
+
+            try {
+                // Fetch a la hoja Confirmacion
+                const response = await fetch('proxy.php?method=read&sheet=Confirmacion&t=' + new Date().getTime());
+                
+                if (!response.ok) throw new Error('Error de conexión');
+                
+                const rawData = await response.json();
+                console.log("Datos recibidos:", rawData); // Para depuración en consola
+
+                // CORRECCIÓN 1: Usar 'familia' en minúscula
+                allGuests = rawData.filter(row => row.familia && String(row.familia).trim() !== "");
+
+                processAndRenderTables(allGuests);
+                
+                const searchInput = document.getElementById('searchInput');
+                searchInput.disabled = false;
+                if(allGuests.length > 0) searchInput.placeholder = "Buscar confirmado...";
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('tablesContainer').innerHTML = 
+                    `<div class="col-span-full text-center text-red-500 p-4 bg-white rounded border border-red-200">
+                        Error al cargar: ${error.message}
+                    </div>`;
+            } finally {
+                // --- UI: Reset ---
+                if(btn && icon && text) {
+                    icon.classList.remove('animate-spin');
+                    text.innerText = "Actualizar";
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        function processAndRenderTables(guests) {
+            const tables = {};
+            const unassigned = [];
+
+            guests.forEach(guest => {
+                // CORRECCIÓN 2: Usar 'mesa' en minúscula
+                let mesaRaw = String(guest.mesa || "").trim();
+
+                if (mesaRaw === "") {
+                    unassigned.push(guest);
+                    return;
+                }
+
+                const numbers = mesaRaw.match(/\d+/g);
+
+                if (numbers) {
+                    [...new Set(numbers)].forEach(num => {
+                        const key = parseInt(num);
+                        if (!tables[key]) tables[key] = [];
+                        tables[key].push(guest);
+                    });
+                } else {
+                    const key = mesaRaw; 
+                    if (!tables[key]) tables[key] = [];
+                    tables[key].push(guest);
+                }
+            });
+
+            renderGrid(tables, unassigned);
+        }
+
+        function renderGrid(tablesObj, unassignedList) {
+            const container = document.getElementById('tablesContainer');
+            container.innerHTML = '';
+
+            const keys = Object.keys(tablesObj).sort((a, b) => {
+                const numA = parseInt(a);
+                const numB = parseInt(b);
+                if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+                return String(a).localeCompare(String(b));
+            });
+
+            keys.forEach(key => {
+                const guestsInTable = tablesObj[key];
+                
+                // CORRECCIÓN 3: Usar minúsculas para el conteo (adultos, adolescentes, ninos)
+                const totalInTable = guestsInTable.reduce((acc, curr) => {
+                     const adu = parseInt(curr.adultos) || 0;
+                     const ado = parseInt(curr.adolescentes) || 0;
+                     const nin = parseInt(curr.ninos) || 0;
+                     return acc + adu + ado + nin;
+                }, 0);
+
+                const card = createTableCard(key, totalInTable, guestsInTable);
+                container.appendChild(card);
+            });
+
+            if (unassignedList.length > 0) {
+                const totalUn = unassignedList.length; 
+                const card = createTableCard("Sin Mesa", totalUn + " fam", unassignedList, true);
+                container.appendChild(card);
+            }
+        }
+
+        function createTableCard(title, count, guests, isUnassigned = false) {
+            const div = document.createElement('div');
+            div.className = `bg-white rounded-xl shadow-sm border ${isUnassigned ? 'border-red-200 bg-red-50' : 'border-emerald-100'} overflow-hidden flex flex-col break-inside-avoid`;
+
+            const headerColor = isUnassigned ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800';
+            
+            let guestsHtml = '';
+            guests.forEach(g => {
+                // CORRECCIÓN 4: Usar minúsculas en el renderizado individual
+                const adu = parseInt(g.adultos) || 0;
+                const ado = parseInt(g.adolescentes) || 0;
+                const nin = parseInt(g.ninos) || 0;
+                const totalRow = adu + ado + nin;
+
+                // CORRECCIÓN 5: Usar 'familia' y 'nombres' en minúscula
+                guestsHtml += `
+                    <div class="border-b border-gray-100 last:border-0 py-3 px-4 hover:bg-gray-50 search-item transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-gray-800 text-sm">${g.familia || 'Sin Nombre'}</p>
+                                <p class="text-xs text-gray-500 truncate max-w-[150px]">${g.nombres || ''}</p>
+                            </div>
+                            <span class="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-1 rounded-full">
+                                ${totalRow} p.
+                            </span>
+                        </div>
+                        <div class="mt-1 flex gap-2 text-[10px] text-gray-400 uppercase tracking-wide">
+                            ${adu > 0 ? `<span>Adul: ${adu}</span>` : ''}
+                            ${ado > 0 ? `<span>Adol: ${ado}</span>` : ''}
+                            ${nin > 0 ? `<span>Niñ: ${nin}</span>` : ''} 
+                        </div>
+                    </div>
+                `;
+            });
+
+            div.innerHTML = `
+                <div class="${headerColor} px-4 py-3 flex justify-between items-center border-b border-gray-200/50">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        ${!isUnassigned ? '<i class="ph ph-check-circle"></i>' : '<i class="ph ph-warning-circle"></i>'}
+                        ${isNaN(title) ? title : 'Mesa ' + title}
+                    </h3>
+                    <span class="text-xs font-bold bg-white/50 px-2 py-1 rounded shadow-sm">
+                        ${typeof count === 'number' ? count + ' pax' : count}
+                    </span>
+                </div>
+                <div class="flex-1">
+                    ${guestsHtml}
+                </div>
+            `;
+            return div;
+        }
+
+        function filterTables(query) {
+            const lowerQuery = query.toLowerCase();
+            const cards = document.querySelectorAll('#tablesContainer > div');
+
+            cards.forEach(card => {
+                const rows = card.querySelectorAll('.search-item');
+                let hasMatch = false;
+
+                rows.forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    if (text.includes(lowerQuery)) {
+                        row.style.display = 'block';
+                        hasMatch = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                if (lowerQuery === "") {
+                    rows.forEach(r => r.style.display = 'block');
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = hasMatch ? 'flex' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

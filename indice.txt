@@ -1,0 +1,7 @@
+LAS CARPETAS IMPORTANTES
+
+la carpeta nueva_confirmacion contiene los nuevos archivos de confirmación de asistencia que ya no depende de Google sheets
+
+la carpeta plantilla_claude_v2 contiene la plantilla que usaré como base, en ella solo se edita el index y el css
+
+la carpeta Sobre_v2_completo contiene la animación buena del sobre que rompe el sello

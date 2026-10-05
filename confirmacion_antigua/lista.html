@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - Plan y Fiesta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: sans-serif; }
+        .checkbox-lg { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+        .saving { opacity: 0.5; pointer-events: none; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen p-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-sm gap-4">
+            <div class="flex flex-col gap-2">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Tablero de Invitados</h1>
+                    <p class="text-gray-500 text-sm">Sincronizado con Google Sheets</p>
+                </div>
+                <button id="btnRefresh" onclick="fetchData()" class="w-fit flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition font-bold text-xs">
+                    <i id="iconRefresh" class="ph ph-arrows-clockwise text-lg"></i> 
+                    <span id="textRefresh">Actualizar</span>
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-4 bg-blue-50 px-6 py-3 rounded-lg border border-blue-100">
+                <div class="text-right">
+                    <p class="text-xs text-blue-500 font-bold uppercase">Invitaciones Enviadas</p>
+                    <p class="text-2xl font-bold text-blue-700">
+                        <span id="sentCount">0</span> <span class="text-sm text-blue-400">/ <span id="totalFamilies">0</span></span>
+                    </p>
+                </div>
+                <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                    <i class="ph ph-paper-plane-tilt text-2xl"></i>
+                </div>
+            </div>
+
+            <div class="text-right hidden md:block">
+                <span class="block text-xs text-gray-400 uppercase tracking-wider">Total Personas</span>
+                <span id="totalDisplay" class="text-4xl font-bold text-gray-600">0</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-blue-500">
+                    <div><p class="text-sm text-gray-500">Adultos</p><p id="countAdultos" class="text-2xl font-bold text-gray-800">0</p></div>
+                    <i class="ph ph-user text-3xl text-blue-200"></i>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-yellow-500">
+                    <div><p class="text-sm text-gray-500">Adolescentes</p><p id="countAdolescentes" class="text-2xl font-bold text-gray-800">0</p></div>
+                    <i class="ph ph-user-circle text-3xl text-yellow-200"></i>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm flex items-center justify-between border-l-4 border-green-500">
+                    <div><p class="text-sm text-gray-500">Niños</p><p id="countNinos" class="text-2xl font-bold text-gray-800">0</p></div>
+                    <i class="ph ph-baby text-3xl text-green-200"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm lg:col-span-2 flex flex-col justify-center items-center">
+                <h3 class="text-gray-500 font-semibold mb-4 w-full text-left">Distribución de Asistentes</h3>
+                <div class="w-full h-64 relative">
+                    <canvas id="guestChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow-sm sticky top-2 z-20 border border-gray-200">
+            <div class="relative">
+                <i class="ph ph-magnifying-glass absolute left-3 top-3.5 text-gray-400 text-lg"></i>
+                <input type="text" id="searchInput" 
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" 
+                    placeholder="Buscar por Familia o Nombres..." disabled>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-center font-bold text-gray-700 uppercase bg-blue-50 w-16">Enviado</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase">Familia</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase">Nombres</th>
+                            <th class="px-4 py-3 text-center font-medium text-gray-500 uppercase">Tot</th>
+                            <th class="px-4 py-3 text-center font-medium text-blue-600 uppercase">Adu</th>
+                            <th class="px-4 py-3 text-center font-medium text-yellow-600 uppercase">Ado</th>
+                            <th class="px-4 py-3 text-center font-medium text-green-600 uppercase">Niñ</th>
+                            <th class="px-4 py-3 text-center font-medium text-gray-500 uppercase">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="guestTableBody" class="divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="8" class="px-6 py-8 text-center text-gray-500 animate-pulse">Cargando datos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let allGuests = [];
+        let chartInstance = null;
+        let sentCount = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            document.getElementById('searchInput').addEventListener('input', (e) => filterData(e.target.value));
+        });
+
+        async function fetchData() {
+            const btn = document.getElementById('btnRefresh');
+            const icon = document.getElementById('iconRefresh');
+            const text = document.getElementById('textRefresh');
+            
+            if(btn && icon && text) {
+                icon.classList.add('animate-spin');
+                text.innerText = "Cargando...";
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+            }
+
+            try {
+                const response = await fetch('proxy.php?method=read&t=' + new Date().getTime());
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const rawData = await response.json();
+                allGuests = rawData.filter(row => row.Familia && String(row.Familia).trim() !== "");
+
+                if (allGuests.length > 0) {
+                    calculateStats(allGuests);
+                    renderTable(allGuests);
+                    document.getElementById('searchInput').disabled = false;
+                } else {
+                    document.getElementById('guestTableBody').innerHTML = '<tr><td colspan="8" class="text-center py-4">No hay familias asignadas todavía.</td></tr>';
+                    document.getElementById('totalDisplay').textContent = 0;
+                    document.getElementById('sentCount').textContent = 0;
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('guestTableBody').innerHTML = `<tr><td colspan="8" class="text-center py-4 text-red-500">Error: ${error.message}</td></tr>`;
+            } finally {
+                if(btn && icon && text) {
+                    icon.classList.remove('animate-spin');
+                    text.innerText = "Actualizar";
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        function calculateStats(data) {
+            let totalAdultos = 0, totalAdolescentes = 0, totalNinos = 0, totalGeneral = 0;
+            sentCount = 0; 
+
+            data.forEach(row => {
+                const adu = parseInt(row.Adultos) || 0;
+                const ado = parseInt(row.Adolescentes) || 0;
+                const nin = parseInt(row.Ninos) || 0;
+                const tot = adu + ado + nin;
+
+                totalAdultos += adu;
+                totalAdolescentes += ado;
+                totalNinos += nin;
+                totalGeneral += tot;
+
+                if (String(row.Enviado).toUpperCase() === 'TRUE') sentCount++;
+            });
+
+            document.getElementById('totalDisplay').textContent = totalGeneral;
+            document.getElementById('totalFamilies').textContent = data.length;
+            document.getElementById('sentCount').textContent = sentCount;
+            document.getElementById('countAdultos').textContent = totalAdultos;
+            document.getElementById('countAdolescentes').textContent = totalAdolescentes;
+            document.getElementById('countNinos').textContent = totalNinos;
+
+            renderChart(totalAdultos, totalAdolescentes, totalNinos);
+        }
+
+        async function toggleSent(checkbox, id) {
+            const isChecked = checkbox.checked;
+            const newStatus = isChecked ? "TRUE" : "FALSE";
+            const rowElement = checkbox.closest('tr');
+
+            updateRowVisuals(rowElement, isChecked);
+            
+            sentCount += isChecked ? 1 : -1;
+            document.getElementById('sentCount').innerText = sentCount;
+
+            checkbox.classList.add('saving');
+
+            try {
+                const formData = new FormData();
+                formData.append('method', 'updateSent');
+                formData.append('id', id);
+                formData.append('status', newStatus);
+
+                const response = await fetch('proxy.php', { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (result.status !== 'success') throw new Error(result.message || 'Error desconocido');
+
+                const guestIndex = allGuests.findIndex(g => g.ID == id);
+                if(guestIndex !== -1) allGuests[guestIndex].Enviado = newStatus;
+
+            } catch (error) {
+                alert('No se pudo guardar el cambio en Google Sheets.');
+                checkbox.checked = !isChecked;
+                updateRowVisuals(rowElement, !isChecked);
+                sentCount += isChecked ? -1 : 1;
+                document.getElementById('sentCount').innerText = sentCount;
+            } finally {
+                checkbox.classList.remove('saving');
+            }
+        }
+
+        function updateRowVisuals(tr, isSent) {
+            if (isSent) {
+                tr.classList.add('bg-green-50', 'border-green-500');
+                tr.classList.remove('hover:bg-gray-50', 'border-transparent');
+                tr.querySelectorAll('td').forEach(td => {
+                    // Atenuamos todo menos los inputs y botones
+                    if(!td.querySelector('input') && !td.querySelector('button')) td.classList.add('opacity-50');
+                });
+            } else {
+                tr.classList.remove('bg-green-50', 'border-green-500');
+                tr.classList.add('hover:bg-gray-50', 'border-transparent');
+                tr.querySelectorAll('td').forEach(td => td.classList.remove('opacity-50'));
+            }
+        }
+
+        // --- NUEVA FUNCIÓN PARA COPIAR LINK ---
+        function copyLink(btn, url) {
+            navigator.clipboard.writeText(url).then(() => {
+                // Guardar texto original
+                const originalText = btn.innerHTML;
+                
+                // Cambiar a estado de éxito
+                btn.innerHTML = '<i class="ph ph-check-circle text-lg"></i> ¡Copiado!';
+                btn.classList.remove('text-blue-600', 'bg-blue-50', 'border-blue-200');
+                btn.classList.add('text-green-700', 'bg-green-100', 'border-green-300');
+
+                // Revertir después de 2 segundos
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.add('text-blue-600', 'bg-blue-50', 'border-blue-200');
+                    btn.classList.remove('text-green-700', 'bg-green-100', 'border-green-300');
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+                alert('No se pudo copiar el link. Intenta seleccionarlo manualmente.');
+            });
+        }
+
+        function renderChart(adultos, adolescentes, ninos) {
+            const ctx = document.getElementById('guestChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Adultos', 'Adolescentes', 'Niños'],
+                    datasets: [{
+                        data: [adultos, adolescentes, ninos],
+                        backgroundColor: ['#3b82f6', '#eab308', '#22c55e'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+            });
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('guestTableBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-500">No hay resultados.</td></tr>';
+                return;
+            }
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                const id = row.ID;
+                const isSent = String(row.Enviado).toUpperCase() === 'TRUE';
+
+                tr.className = "transition-colors border-l-4 " + 
+                    (isSent ? "bg-green-50 border-green-500" : "hover:bg-gray-50 border-transparent");
+                
+                const opacityClass = isSent ? "opacity-50" : "";
+                const tot = (parseInt(row.Adultos)||0) + (parseInt(row.Adolescentes)||0) + (parseInt(row.Ninos)||0);
+
+                // Botón de Copiar Link personalizado
+                const linkButton = row.Link && row.Link !== '#' ? `
+                    <button onclick="copyLink(this, '${row.Link}')" 
+                        class="flex items-center justify-center gap-1 w-24 mx-auto text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 py-1.5 rounded transition-all">
+                        <i class="ph ph-copy"></i> Copiar Link
+                    </button>
+                ` : '<span class="text-gray-300">-</span>';
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-center">
+                        <input type="checkbox" class="checkbox-lg accent-green-600 rounded" 
+                            onchange="toggleSent(this, '${id}')" ${isSent ? 'checked' : ''}>
+                    </td>
+                    <td class="px-4 py-3 font-medium text-gray-900 ${opacityClass}">${row.Familia || '-'}</td>
+                    <td class="px-4 py-3 text-gray-500 max-w-xs truncate text-xs ${opacityClass}" title="${row.Nombres}">${row.Nombres || ''}</td>
+                    <td class="px-4 py-3 text-center font-bold text-gray-800 bg-white/50 rounded ${opacityClass}">${tot}</td>
+                    <td class="px-4 py-3 text-center text-blue-600 ${opacityClass}">${parseInt(row.Adultos)||0}</td>
+                    <td class="px-4 py-3 text-center text-yellow-600 ${opacityClass}">${parseInt(row.Adolescentes)||0}</td>
+                    <td class="px-4 py-3 text-center text-green-600 ${opacityClass}">${parseInt(row.Ninos)||0}</td>
+                    <td class="px-4 py-3 text-center">
+                        ${linkButton}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterData(query) {
+            const lowerQuery = query.toLowerCase();
+            const filtered = allGuests.filter(row => {
+                const f = (row.Familia || '').toLowerCase();
+                const n = (row.Nombres || '').toLowerCase();
+                return f.includes(lowerQuery) || n.includes(lowerQuery);
+            });
+            renderTable(filtered);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<style>
+  #contenedor-datos {
+    display: none; /* Se activa con JS */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: #806A91;
+    font-family: 'Libre Bodoni', serif;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px auto;
+    max-width: 75%;
+    text-align: center;
+  }
+
+  .fila-dato {
+    margin: 7px 0;
+    line-height: 1.2;
+    font-size: 20px;
+  }
+
+  .valor-dato { font-size: 23px; font-weight: bold; }
+</style>
+
+<div id="contenedor-datos">
+  
+  <div id="box-Familia" class="fila-dato">
+    <div>Invitación para:</div>
+    <div id="val-Familia" class="valor-dato"></div>
+  </div>
+
+  <div id="box-Invitados" class="fila-dato">
+    <div>Cantidad de invitados:</div>
+    <div id="val-Invitados" class="valor-dato"></div>
+  </div>
+
+  <div id="box-Adultos" class="fila-dato">
+    <div>Adultos:</div>
+    <div id="val-Adultos" class="valor-dato"></div>
+  </div>
+
+  <div id="box-Adolescentes" class="fila-dato">
+    <div>Adolescentes:</div>
+    <div id="val-Adolescentes" class="valor-dato"></div>
+  </div>
+
+  <div id="box-Ninos" class="fila-dato">
+    <div>Niños:</div>
+    <div id="val-Ninos" class="valor-dato"></div>
+  </div>
+
+  <div id="box-Nombres" class="fila-dato">
+    <div>Nombre de los invitados:</div>
+    <div id="val-Nombres" class="valor-dato"></div>
+  </div>
+
+  <div id="box-Mesa" class="fila-dato">
+    <div>Número de mesa:</div>
+    <div id="val-Mesa" class="valor-dato"></div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Obtener ID de la URL
+  const id = new URLSearchParams(window.location.search).get("id");
+  if (!id) return; 
+
+  // 2. Configuración: Relaciona la clave del JSON con el tipo de validación necesaria
+  // Se agregó "Adolescentes" para coincidir con el JSON del Google Apps Script
+  const campos = [
+    { key: "Familia",      type: "text" },
+    { key: "Invitados",    type: "num"  },
+    { key: "Adultos",      type: "num"  },
+    { key: "Adolescentes", type: "num"  }, // <-- Nuevo campo en la configuración
+    { key: "Ninos",        type: "num"  },
+    { key: "Nombres",      type: "text" },
+    { key: "Mesa",         type: "text" }
+  ];
+
+  // 3. Obtener datos
+  fetch("proxy.php?sheet=Lista")
+    .then(r => r.json())
+    .then(data => {
+      // Buscar el registro exacto
+      const registro = Array.isArray(data) ? data.find(item => item.ID === id) : null;
+      
+      if (registro) {
+        // 4. Bucle mágico: Rellena o esconde automáticamente
+        campos.forEach(campo => {
+          // Nota: registro[campo.key] buscará "Adolescentes" en el JSON
+          const valor = registro[campo.key];
+          const contenedor = document.getElementById(`box-${campo.key}`);
+          const elementoTexto = document.getElementById(`val-${campo.key}`);
+
+          // Lógica de validación simplificada
+          let esValido = false;
+          if (campo.type === "num")  esValido = Number(valor) > 0;
+          else                       esValido = valor && String(valor).trim() !== "";
+
+          if (esValido) {
+            elementoTexto.textContent = valor;
+          } else {
+            contenedor.style.display = "none";
+          }
+        });
+
+        // Mostrar la tarjeta final
+        document.getElementById("contenedor-datos").style.display = "flex";
+      }
+    })
+    .catch(err => console.error("Error:", err));
+});
+</script>
