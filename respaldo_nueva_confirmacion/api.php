@@ -6,7 +6,6 @@
 //   invitados.json   -> lo llena registro.html (400 códigos)
 //   confirmados.json -> lo llena el formulario de confirmacion.html
 //   firmas.json      -> felicitaciones que se escriben en confirmacion.html
-//   accesos.json     -> registro de entradas que hace escaner.html en la recepción
 //
 // Acciones públicas (las usan los invitados):
 //   GET  api.php?accion=invitado&id=XXXXX      datos de la invitación + estado del formulario
@@ -14,18 +13,14 @@
 //   GET  api.php?accion=firmas                 libro de firmas
 //   GET  api.php?accion=formulario             ¿el formulario está abierto?
 //   POST api.php?accion=confirmar              envía el formulario de confirmación
-//   GET  api.php?accion=escaneo&id=XXXXX       invitación + confirmación + entradas registradas
-//   GET  api.php?accion=resumen_accesos        cuántas personas han entrado al evento
 //
-// Acciones de administración (si en config.php se pone una clave, la piden en el encabezado X-Clave):
+// Acciones de administración (requieren la clave de config.php en el encabezado X-Clave):
 //   GET  api.php?accion=invitados
 //   POST api.php?accion=guardar_invitados      {"cambios":[{id, familia, ...}]}
 //   GET  api.php?accion=confirmados
 //   POST api.php?accion=actualizar_mesa        {"id":"XXXXX","mesa":"5"}
 //   POST api.php?accion=formulario             {"visible":true}
-//   POST api.php?accion=registrar_acceso       {"id":"XXXXX","personas":3}  marca el código como usado
-//   POST api.php?accion=deshacer_acceso        {"id":"XXXXX"}  borra la última entrada de ese código
-//   GET  api.php?accion=respaldo               descarga de los 4 JSON juntos
+//   GET  api.php?accion=respaldo               descarga de los 3 JSON juntos
 
 require __DIR__ . '/config.php';
 
@@ -154,21 +149,6 @@ function indice(array $lista, $id)
     return -1;
 }
 
-// Nombre a mostrar cuando no se capturó "Familia o Nombre"
-function nombre_invitado(array $inv)
-{
-    if (trim((string) ($inv['familia'] ?? '')) !== '') return $inv['familia'];
-    if (trim((string) ($inv['nombres'] ?? '')) !== '') return $inv['nombres'];
-    return 'Invitado ' . $inv['id'];
-}
-
-function accesos_de($id)
-{
-    return array_values(array_filter(leer('accesos'), function ($a) use ($id) {
-        return strtoupper($a['id'] ?? '') === $id;
-    }));
-}
-
 // Si la confirmación no tiene mesa propia, se muestra la mesa asignada en invitados.json
 function con_mesa(array $confirmacion, array $invitados)
 {
@@ -183,9 +163,8 @@ function con_mesa(array $confirmacion, array $invitados)
 
 function formulario_visible()
 {
-    // Abierto desde el inicio; solo se cierra si en control_formulario.html se elige "Ocultar"
     $archivo = DATA_DIR . '/formulario.txt';
-    return !is_file($archivo) || trim(file_get_contents($archivo)) !== 'false';
+    return is_file($archivo) && trim(file_get_contents($archivo)) === 'true';
 }
 
 // ---------- Utilidades ----------
@@ -231,7 +210,7 @@ switch ($accion) {
         $id = normalizar_id($_GET['id'] ?? '');
         $invitados = leer('invitados');
         $i = indice($invitados, $id);
-        if ($i < 0) fallar('Invitación no encontrada.', 404);
+        if ($i < 0 || $invitados[$i]['familia'] === '') fallar('Invitación no encontrada.', 404);
 
         $invitado = $invitados[$i];
         unset($invitado['enviado']);
@@ -280,12 +259,8 @@ switch ($accion) {
         $id = normalizar_id($entrada['id'] ?? '');
         $invitados = leer('invitados');
         $i = indice($invitados, $id);
-        if ($i < 0) fallar('El código de invitación no es válido.', 404);
+        if ($i < 0 || $invitados[$i]['familia'] === '') fallar('El código de invitación no es válido.', 404);
         $inv = $invitados[$i];
-
-        // Si no se capturó "Familia o Nombre", se usa el nombre que escribe el invitado en el formulario
-        $familia = trim($inv['familia']) !== '' ? $inv['familia'] : texto($entrada['nombre'] ?? '', 150);
-        if ($familia === '') $familia = nombre_invitado($inv);
 
         $asistira = $entrada['asistira'] ?? '';
         if (!in_array($asistira, ['Si', 'No'], true)) fallar('Por favor, indica si asistirás.');
@@ -299,7 +274,6 @@ switch ($accion) {
             $ninos = entero($entrada['cantidad_ninos'] ?? 0, 0, (int) $inv['ninos']);
             $suma = $adultos + $adolescentes + $ninos;
             $maximo = max((int) $inv['total'], (int) $inv['adultos'] + (int) $inv['adolescentes'] + (int) $inv['ninos']);
-            if ($maximo === 0) $maximo = MAX_PERSONAS_SIN_ASIGNAR; // invitación sin cantidad capturada
             $cantidad = $suma > 0 ? $suma : entero($entrada['cantidad_personas'] ?? 0, 0, $maximo);
             if ($cantidad < 1) fallar('Indica cuántas personas asistirán.');
             $nombres = texto($entrada['nombres_personas'] ?? '', 1000);
@@ -308,12 +282,12 @@ switch ($accion) {
         $ahora = date('Y-m-d H:i:s');
 
         // Si el invitado vuelve a confirmar se actualiza su registro (no se duplica)
-        $registro = con_base('confirmados', function (array &$lista) use ($id, $familia, $asistira, $cantidad, $adultos, $adolescentes, $ninos, $nombres, $ahora) {
+        $registro = con_base('confirmados', function (array &$lista) use ($id, $inv, $asistira, $cantidad, $adultos, $adolescentes, $ninos, $nombres, $ahora) {
             $j = indice($lista, $id);
             $previo = $j >= 0 ? $lista[$j] : null;
             $registro = [
                 'id' => $id,
-                'familia' => $familia,
+                'familia' => $inv['familia'],
                 'asistira' => $asistira,
                 'cantidad' => $cantidad,
                 'adultos' => $adultos,
@@ -330,8 +304,8 @@ switch ($accion) {
         });
 
         if ($mensaje !== '') {
-            con_base('firmas', function (array &$lista) use ($id, $familia, $mensaje, $ahora) {
-                $firma = ['id' => $id, 'nombre' => $familia, 'mensaje' => $mensaje, 'fecha' => $ahora];
+            con_base('firmas', function (array &$lista) use ($id, $inv, $mensaje, $ahora) {
+                $firma = ['id' => $id, 'nombre' => $inv['familia'], 'mensaje' => $mensaje, 'fecha' => $ahora];
                 $j = indice($lista, $id);
                 if ($j >= 0) $lista[$j] = $firma;
                 else $lista[] = $firma;
@@ -340,84 +314,7 @@ switch ($accion) {
 
         responder(['ok' => true, 'confirmacion' => con_mesa($registro, $invitados)]);
 
-    case 'escaneo':
-        $id = normalizar_id($_GET['id'] ?? '');
-        $invitados = leer('invitados');
-        $confirmados = leer('confirmados');
-        $i = indice($invitados, $id);
-        $j = indice($confirmados, $id);
-        if ($i < 0 && $j < 0) fallar('Este código no existe.', 404);
-
-        $invitado = $i >= 0 ? $invitados[$i] : null;
-        if ($invitado) {
-            unset($invitado['enviado']);
-            $invitado['nombre_visible'] = nombre_invitado($invitado);
-        }
-        responder([
-            'ok' => true,
-            'id' => $id,
-            'invitado' => $invitado,
-            'confirmacion' => $j >= 0 ? con_mesa($confirmados[$j], $invitados) : null,
-            'accesos' => accesos_de($id),
-        ]);
-
-    case 'resumen_accesos':
-        $personas = 0;
-        $familias = [];
-        foreach (leer('accesos') as $a) {
-            $personas += (int) ($a['personas'] ?? 0);
-            $familias[$a['id']] = true;
-        }
-        $personasConf = 0;
-        $familiasConf = 0;
-        foreach (leer('confirmados') as $c) {
-            if (($c['asistira'] ?? '') !== 'Si') continue;
-            $personasConf += (int) $c['cantidad'];
-            $familiasConf++;
-        }
-        responder([
-            'ok' => true,
-            'personas_ingresadas' => $personas,
-            'familias_ingresadas' => count($familias),
-            'personas_confirmadas' => $personasConf,
-            'familias_confirmadas' => $familiasConf,
-        ]);
-
     // ===== ADMINISTRACIÓN =====
-
-    case 'registrar_acceso':
-        requiere_admin();
-        requiere_post();
-        $id = normalizar_id($entrada['id'] ?? '');
-        $personas = entero($entrada['personas'] ?? 1, 1, 999);
-        $invitados = leer('invitados');
-        $confirmados = leer('confirmados');
-        $i = indice($invitados, $id);
-        $j = indice($confirmados, $id);
-        if ($i < 0 && $j < 0) fallar('Este código no existe.', 404);
-
-        $nombre = $j >= 0 ? $confirmados[$j]['familia'] : nombre_invitado($invitados[$i]);
-        $ahora = date('Y-m-d H:i:s');
-        con_base('accesos', function (array &$lista) use ($id, $nombre, $personas, $ahora) {
-            $lista[] = ['id' => $id, 'familia' => $nombre, 'personas' => $personas, 'fecha' => $ahora];
-        });
-        responder(['ok' => true, 'accesos' => accesos_de($id)]);
-
-    case 'deshacer_acceso':
-        requiere_admin();
-        requiere_post();
-        $id = normalizar_id($entrada['id'] ?? '');
-        $borrado = con_base('accesos', function (array &$lista) use ($id) {
-            for ($k = count($lista) - 1; $k >= 0; $k--) {
-                if (strtoupper($lista[$k]['id'] ?? '') === $id) {
-                    array_splice($lista, $k, 1);
-                    return true;
-                }
-            }
-            return false;
-        });
-        if (!$borrado) fallar('Este código no tiene entradas registradas.', 404);
-        responder(['ok' => true, 'accesos' => accesos_de($id)]);
 
     case 'invitados':
         requiere_admin();
@@ -486,7 +383,6 @@ switch ($accion) {
             'invitados' => leer('invitados'),
             'confirmados' => leer('confirmados'),
             'firmas' => leer('firmas'),
-            'accesos' => leer('accesos'),
         ]);
 
     default:

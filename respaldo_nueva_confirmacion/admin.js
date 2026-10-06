@@ -129,17 +129,6 @@ function estadoCargando(cargando, textoNormal = 'Actualizar') {
     btn.classList.toggle('cursor-not-allowed', cargando);
 }
 
-// Una fila "tiene datos" si se capturó cualquier cosa (no hace falta escribir Familia o Nombre)
-function tieneDatos(r) {
-    return [r.familia, r.nombres, r.mesa].some(v => String(v ?? '').trim() !== '')
-        || num(r.total) + num(r.adultos) + num(r.adolescentes) + num(r.ninos) > 0;
-}
-
-// Nombre a mostrar: Familia o Nombre, si no los nombres de los invitados, si no el código
-function nombreVisible(r) {
-    return String(r.familia ?? '').trim() || String(r.nombres ?? '').trim() || `Invitado ${r.id}`;
-}
-
 function sumaPersonas(r) {
     const suma = num(r.adultos) + num(r.adolescentes) + num(r.ninos);
     return suma || num(r.total) || num(r.cantidad);

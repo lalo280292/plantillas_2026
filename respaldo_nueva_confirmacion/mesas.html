@@ -68,8 +68,8 @@
             try {
                 const res = await apiAdmin('invitados');
 
-                // Solo filas con datos (aunque no tengan Familia o Nombre)
-                allGuests = res.invitados.filter(tieneDatos).map(row => ({ ...row, familia: nombreVisible(row) }));
+                // Solo filas que tengan Familia
+                allGuests = res.invitados.filter(row => row.familia && String(row.familia).trim() !== "");
                 renderGrid(agruparPorMesa(allGuests));
 
                 const searchInput = document.getElementById('searchInput');

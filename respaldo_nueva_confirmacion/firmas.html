@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Libro de Firmas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0 30px;
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+        }
+        header small {
+            display: block;
+            font-size: 0.35em;
+            font-weight: normal;
+            opacity: 0.75;
+            margin-top: 8px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 50px 10px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            flex: 1 1 calc(33.333% - 30px);
+            max-width: calc(33.333% - 30px);
+            margin: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            font-size: 1.5em;
+            margin: 0 0 15px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .card p {
+            font-style: italic;
+            font-size: 1.2em;
+            color: #7f8c8d;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+        .card time {
+            display: block;
+            font-size: 0.85em;
+            color: #b0b8bf;
+            text-align: right;
+        }
+        .estado {
+            width: 100%;
+            text-align: center;
+            color: #95a5a6;
+            font-size: 1.3em;
+            padding: 40px 0;
+        }
+
+        @media (max-width: 1024px) {
+            .card {
+                flex: 1 1 calc(50% - 30px);
+                max-width: calc(50% - 30px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                font-size: 2.5em;
+                padding: 30px 0 24px;
+            }
+            .container {
+                padding: 30px 10px;
+            }
+            .card {
+                flex: 1 1 calc(100% - 30px);
+                max-width: calc(100% - 30px);
+            }
+            .card h2 {
+                font-size: 1.4em;
+            }
+            .card p {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                font-size: 2em;
+                padding: 20px 0;
+            }
+            .card {
+                margin: 10px 5px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Libro de Firmas
+    <small id="contador"></small>
+</header>
+
+<div class="container" id="content">
+    <div class="estado">Cargando firmas...</div>
+</div>
+
+<script>
+    fetch('api.php?accion=firmas&t=' + Date.now(), { cache: 'no-store' })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.ok) throw new Error(data.error);
+            const content = document.getElementById('content');
+            content.innerHTML = '';
+
+            const firmas = data.firmas.filter(item => String(item.mensaje || '').trim() !== '');
+            document.getElementById('contador').textContent =
+                firmas.length ? `${firmas.length} ${firmas.length === 1 ? 'mensaje' : 'mensajes'}` : '';
+
+            if (!firmas.length) {
+                content.innerHTML = '<div class="estado">Aún no hay mensajes. ¡Pronto llegarán las felicitaciones!</div>';
+                return;
+            }
+
+            firmas.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const name = document.createElement('h2');
+                name.textContent = item.nombre;
+
+                const message = document.createElement('p');
+                message.textContent = item.mensaje;
+
+                card.appendChild(name);
+                card.appendChild(message);
+
+                const fecha = new Date(String(item.fecha || '').replace(' ', 'T'));
+                if (!isNaN(fecha)) {
+                    const time = document.createElement('time');
+                    time.textContent = fecha.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
+                    card.appendChild(time);
+                }
+
+                content.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos:', error);
+            document.getElementById('content').innerHTML = '<div class="estado">No se pudieron cargar las firmas.</div>';
+        });
+</script>
+
+</body>
+</html>

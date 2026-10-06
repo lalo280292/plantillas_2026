@@ -101,8 +101,7 @@
           registro.total = (Number(registro.adultos) || 0) + (Number(registro.adolescentes) || 0) + (Number(registro.ninos) || 0);
         }
 
-        // 4. Rellena o esconde automáticamente (no hace falta que tenga Familia o Nombre)
-        let mostrados = 0;
+        // 4. Rellena o esconde automáticamente
         campos.forEach(campo => {
           const valor = registro[campo.key];
           const contenedor = document.getElementById(`box-${campo.caja}`);
@@ -115,14 +114,13 @@
           if (esValido) {
             elementoTexto.textContent = valor;
             contenedor.style.display = "";
-            mostrados++;
           } else {
             contenedor.style.display = "none";
           }
         });
 
-        // Mostrar la tarjeta final (si el código no tiene ningún dato capturado, no se muestra vacía)
-        if (mostrados) document.getElementById("contenedor-datos").style.display = "flex";
+        // Mostrar la tarjeta final
+        document.getElementById("contenedor-datos").style.display = "flex";
       })
       .catch(err => console.error("Error:", err));
   }

@@ -165,6 +165,11 @@
                 </a>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Registro de Invitados</h1>
+                    <p class="text-slate-500 text-sm">
+                        Base de datos <code class="text-indigo-600 font-semibold">invitados.json</code> ·
+                        <span id="totalCodigos">0</span> códigos
+                    </p>
+                    <p class="text-slate-400 text-xs mt-1 break-all">Link de ejemplo: <span id="linkEjemplo">—</span></p>
                 </div>
                 <button id="btnRefresh" onclick="recargar()" class="w-fit flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition font-bold text-xs">
                     <i id="iconRefresh" class="ph ph-arrows-clockwise text-lg"></i>
@@ -262,12 +267,12 @@
         </div>
 
         <p class="text-center text-xs text-slate-400">
-            Los cambios se guardan solos · <b>Enter</b> baja a la siguiente fila · <b>↑ ↓</b> moverse entre filas · <b>Ctrl + S</b> guardar ya
+            Atajos: <b>Enter</b> baja a la siguiente fila · <b>↑ ↓</b> moverse entre filas · <b>Ctrl + S</b> guardar
         </p>
     </div>
 
     <!-- BOTÓN GUARDAR / NO GUARDADO -->
-    <button id="barraGuardar" data-estado="cargando" onclick="guardar(true)">
+    <button id="barraGuardar" data-estado="cargando" onclick="guardar()">
         <i class="icono ph ph-spinner animate-spin"></i>
         <span>
             <span class="titulo">Cargando...</span>
@@ -293,11 +298,11 @@
 
         const FILTROS = {
             todos:     { texto: 'Todos',        fn: () => true },
-            familia:   { texto: 'Con datos',    fn: f => tieneDatos(f) },
-            vacios:    { texto: 'Vacíos',       fn: f => !tieneDatos(f) },
-            enviados:  { texto: 'Enviadas',     fn: f => tieneDatos(f) && f.enviado },
-            porEnviar: { texto: 'Por enviar',   fn: f => tieneDatos(f) && !f.enviado },
-            sinMesa:   { texto: 'Sin mesa',     fn: f => tieneDatos(f) && !String(f.mesa).trim() },
+            familia:   { texto: 'Con familia',  fn: f => tieneFamilia(f) },
+            vacios:    { texto: 'Sin asignar',  fn: f => !tieneFamilia(f) },
+            enviados:  { texto: 'Enviadas',     fn: f => tieneFamilia(f) && f.enviado },
+            porEnviar: { texto: 'Por enviar',   fn: f => tieneFamilia(f) && !f.enviado },
+            sinMesa:   { texto: 'Sin mesa',     fn: f => tieneFamilia(f) && !String(f.mesa).trim() },
             cambios:   { texto: 'Sin guardar',  fn: f => pendientes.has(f.id) },
         };
 
@@ -315,11 +320,11 @@
             });
         });
 
-        // Ctrl + S guarda de inmediato
+        // Ctrl + S guarda
         document.addEventListener('keydown', e => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                 e.preventDefault();
-                guardar(true);
+                guardar();
             }
         });
 
@@ -333,6 +338,7 @@
 
         // ================== CARGA ==================
 
+        function tieneFamilia(f) { return String(f.familia || '').trim() !== ''; }
 
         function foto(f) {
             return JSON.stringify([String(f.familia).trim(), f.total, f.adultos, f.adolescentes, f.ninos, String(f.nombres).trim(), String(f.mesa).trim(), !!f.enviado]);
@@ -366,6 +372,8 @@
                 porId.clear(); guardadas.clear(); pendientes.clear();
                 filas.forEach(f => { porId.set(f.id, f); guardadas.set(f.id, foto(f)); });
 
+                document.getElementById('totalCodigos').textContent = filas.length;
+                document.getElementById('linkEjemplo').textContent = filas[0] ? linkInvitacion(filas[0].id) : linkInvitacion('XXXXX');
                 document.getElementById('searchInput').disabled = false;
 
                 errorGuardado = '';
@@ -427,7 +435,7 @@
         }
 
         function filaClases(f) {
-            return [f.enviado ? 'enviada' : '', pendientes.has(f.id) ? 'sucia' : '', tieneDatos(f) ? '' : 'vacia'].join(' ').trim();
+            return [f.enviado ? 'enviada' : '', pendientes.has(f.id) ? 'sucia' : '', tieneFamilia(f) ? '' : 'vacia'].join(' ').trim();
         }
 
         function renderTabla() {
@@ -451,7 +459,6 @@
             tr.className = filaClases(fila);
             programarEstadisticas();
             pintarBoton();
-            programarGuardado();
         }
 
         function alEscribir(e) {
@@ -507,9 +514,7 @@
             const { tr, fila } = filaDe(btn);
             if (!fila) return;
             copiarConAviso(btn, linkInvitacion(fila.id));
-            // Se guarda de inmediato para que el invitado vea sus datos al abrir el link
-            if (pendientes.size) guardar();
-            const nombre = tieneDatos(fila) ? nombreVisible(fila) : fila.id;
+            const nombre = tieneFamilia(fila) ? fila.familia : fila.id;
             if (!fila.enviado) {
                 mostrarToast(`Link de «${nombre}» copiado`, 'Marcar como enviada', () => {
                     const chk = tr.querySelector('[data-campo="enviado"]');
@@ -557,6 +562,7 @@
 
             const tbody = document.getElementById('guestTableBody');
             tbody.insertAdjacentHTML('beforeend', htmlFila(fila, filas.length - 1));
+            document.getElementById('totalCodigos').textContent = filas.length;
 
             // Limpia filtros para que la fila nueva se vea
             document.getElementById('searchInput').value = '';
@@ -567,8 +573,7 @@
             const tr = tbody.lastElementChild;
             tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(() => tr.querySelector('[data-campo="familia"]').focus({ preventScroll: true }), 350);
-            programarGuardado();
-            mostrarToast(`Código nuevo ${fila.id} agregado.`);
+            mostrarToast(`Código nuevo ${fila.id} agregado. Recuerda guardar.`);
         }
 
         // ================== FILTROS ==================
@@ -610,7 +615,7 @@
         }
 
         function calcularEstadisticas() {
-            const familias = filas.filter(tieneDatos);
+            const familias = filas.filter(tieneFamilia);
             let adultos = 0, adolescentes = 0, ninos = 0, total = 0, sinDesglose = 0, enviadas = 0;
             familias.forEach(f => {
                 const suma = f.adultos + f.adolescentes + f.ninos;
@@ -654,25 +659,9 @@
 
         // ================== GUARDAR ==================
 
-        // Guardado automático: se guarda poco después de dejar de escribir
-        const ESPERA_AUTOGUARDADO = 1000;
-        let temporizadorGuardado = null;
-        let repetirGuardado = false;
-
-        function programarGuardado(espera = ESPERA_AUTOGUARDADO) {
-            clearTimeout(temporizadorGuardado);
-            if (pendientes.size) temporizadorGuardado = setTimeout(() => guardar(), espera);
-        }
-
-        async function guardar(manual = false) {
-            clearTimeout(temporizadorGuardado);
-            if (guardando) { repetirGuardado = true; return; }
-            if (!pendientes.size) {
-                if (manual) mostrarToast('Todo está guardado');
-                return;
-            }
+        async function guardar() {
+            if (guardando || !pendientes.size) return;
             guardando = true;
-            repetirGuardado = false;
             const ids = [...pendientes];
             const cambios = ids.map(id => {
                 const f = porId.get(id);
@@ -692,17 +681,15 @@
                 });
                 ultimoGuardado = new Date();
                 errorGuardado = '';
-                if (manual) mostrarToast(`${cambios.length} fila(s) guardadas`);
+                mostrarToast(`${cambios.length} fila(s) guardadas en invitados.json`);
                 pintarChips();
             } catch (error) {
                 console.error(error);
                 errorGuardado = error.message;
-                mostrarToast('⚠ No se pudo guardar: ' + error.message + '. Se reintentará solo.');
+                mostrarToast('No se pudo guardar: ' + error.message);
             } finally {
                 guardando = false;
                 pintarBoton();
-                // Si se escribió algo mientras se guardaba, o falló, se vuelve a intentar
-                if (pendientes.size) programarGuardado(errorGuardado ? 8000 : (repetirGuardado ? 100 : ESPERA_AUTOGUARDADO));
             }
         }
 
@@ -714,7 +701,7 @@
                 cargando:  ['ph ph-spinner animate-spin', 'Cargando...', 'Leyendo invitados.json'],
                 guardando: ['ph ph-spinner animate-spin', 'Guardando...', 'No cierres la página'],
                 guardado:  ['ph-fill ph-check-circle', 'Guardado', hora ? `Todo al día · ${hora}` : 'Sin cambios pendientes'],
-                pendiente: ['ph-fill ph-floppy-disk', 'Guardar ahora', `No guardado · ${pendientes.size} fila(s) · se guardará solo`],
+                pendiente: ['ph-fill ph-floppy-disk', 'Guardar cambios', `No guardado · ${pendientes.size} fila(s) · Ctrl+S`],
                 error:     ['ph-fill ph-warning-circle', 'No guardado · Reintentar', detalleForzado || errorGuardado || 'Toca para intentar de nuevo'],
             };
             const [icono, titulo, detalle] = vistas[estado];

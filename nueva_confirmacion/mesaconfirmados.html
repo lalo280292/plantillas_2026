@@ -70,7 +70,6 @@
 
                 // Solo los que dijeron que SÍ asistirán
                 allGuests = res.confirmados.filter(row =>
-                    row.familia && String(row.familia).trim() !== "" &&
                     ['si', 'sí'].includes(String(row.asistira || '').toLowerCase().trim())
                 );
                 renderGrid(agruparPorMesa(allGuests));

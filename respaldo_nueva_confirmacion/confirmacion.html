@@ -79,10 +79,9 @@
     <form id="my-google-sheet" novalidate>
         <div class="aviso-confirmacion" id="avisoConfirmacion"></div>
 
-        <!-- Solo se muestra si la invitación no tiene "Familia o Nombre" capturado en el registro -->
-        <div class="form-group hidden-field" id="container-nombre">
-            <label for="nombre">Tu nombre o familia:</label>
-            <input type="text" name="nombre" id="nombre" maxlength="150" autocomplete="name">
+        <div class="form-group hidden-field">
+            <label for="nombre">Nombre(s) / Familia:</label>
+            <input type="text" name="nombre" id="nombre">
         </div>
 
         <input type="hidden" name="id" id="idField">
@@ -140,7 +139,6 @@
 <script>
 (function () {
     const API_URL = 'api.php';
-    const MAX_SIN_ASIGNAR = 10; // si la invitación no tiene cantidad, se puede elegir de 1 a 10 (igual que config.php)
 
     function iniciar() {
         const id = new URLSearchParams(window.location.search).get('id');
@@ -175,7 +173,7 @@
             .catch(err => console.error('Error al cargar la invitación:', err));
 
         // 2. Llena un selector de 0 (o 1) hasta el máximo asignado
-        function populateSelect(selectName, containerId, count, startFromOne = false, porDefecto = null) {
+        function populateSelect(selectName, containerId, count, startFromOne = false) {
             const container = document.getElementById(containerId);
             const select = form.querySelector(`select[name="${selectName}"]`);
             const max = parseInt(count, 10) || 0;
@@ -186,14 +184,13 @@
                 for (let i = startFromOne ? 1 : 0; i <= max; i++) {
                     select.add(new Option(i, i));
                 }
-                select.value = porDefecto ?? max; // El máximo por defecto
+                select.value = max; // El máximo por defecto
             } else {
                 container.style.display = 'none';
                 select.add(new Option(0, 0));
                 select.value = 0;
             }
             select.dataset.max = max;
-            select.dataset.defecto = select.value;
         }
 
         function hayDesglose() {
@@ -201,17 +198,13 @@
         }
 
         function prellenarFormulario(data, confirmacion) {
-            // Si en el registro no se escribió "Familia o Nombre", se le pide al invitado
-            const sinNombre = !String(data.familia || '').trim();
-            document.getElementById('container-nombre').classList.toggle('hidden-field', !sinNombre);
-            document.getElementById('nombre').value = data.familia || (confirmacion && confirmacion.familia) || '';
+            document.getElementById('nombre').value = data.familia || '';
             document.getElementById('mesaField').value = data.mesa || '';
 
             const total = Math.max(parseInt(data.total, 10) || 0,
                 (parseInt(data.adultos, 10) || 0) + (parseInt(data.adolescentes, 10) || 0) + (parseInt(data.ninos, 10) || 0));
-            const sinCantidad = total === 0;
 
-            populateSelect('cantidad_personas', 'container-personas', sinCantidad ? MAX_SIN_ASIGNAR : total, true, sinCantidad ? 1 : null);
+            populateSelect('cantidad_personas', 'container-personas', total, true);
             populateSelect('cantidad_adultos', 'container-adultos', data.adultos, false);
             populateSelect('cantidad_adolescentes', 'container-adolescentes', data.adolescentes, false);
             populateSelect('cantidad_ninos', 'container-ninos', data.ninos, false);
@@ -256,10 +249,10 @@
             radio.addEventListener('change', (e) => {
                 if (e.target.value === 'Si') {
                     detallesDiv.style.display = 'block';
-                    // Al volver a "Sí" se restauran los valores iniciales
+                    // Al volver a "Sí" se restauran los máximos
                     ['cantidad_personas', ...desglose].forEach(n => {
                         const sel = document.getElementById(n);
-                        if (sel.dataset.max > 0) sel.value = sel.dataset.defecto;
+                        if (sel.dataset.max > 0) sel.value = sel.dataset.max;
                     });
                 } else {
                     detallesDiv.style.display = 'none';
@@ -273,12 +266,6 @@
 
             const asistiraVal = form.querySelector('input[name="asistira"]:checked')?.value;
             if (!asistiraVal) return alert('Por favor, indica si asistirás.');
-
-            const campoNombre = document.getElementById('nombre');
-            if (!document.getElementById('container-nombre').classList.contains('hidden-field') && !campoNombre.value.trim()) {
-                campoNombre.focus();
-                return alert('Por favor, escribe tu nombre o el de tu familia.');
-            }
 
             if (asistiraVal === 'Si') {
                 const suma = desglose.reduce((acc, n) => acc + (parseInt(document.getElementById(n).value, 10) || 0), 0);
